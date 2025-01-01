@@ -6,7 +6,7 @@ plugins {
     id("com.android.library").apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.jetbrainsCompose).apply(false)
-    kotlin("plugin.serialization") version "2.0.20"
+    kotlin("plugin.serialization") version "2.1.0"
     id("com.google.gms.google-services") version "4.4.2" apply false
 
 }

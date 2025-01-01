@@ -10,15 +10,15 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("com.google.devtools.ksp") version "2.0.20-1.0.25"
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
     id("kotlinx-serialization")
-    id("de.jensklingenberg.ktorfit") version "2.1.0"
+    id("de.jensklingenberg.ktorfit") version "2.2.0"
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.crashlytics) apply false
 
 }
 
-val ktorfitVersion = "2.1.0"
+val ktorfitVersion = "2.2.0"
 
 
 

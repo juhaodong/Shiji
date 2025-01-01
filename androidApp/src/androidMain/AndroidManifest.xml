@@ -26,7 +26,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/black" />
         <activity
-            android:name=".compose.app.MainActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
