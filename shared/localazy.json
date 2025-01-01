@@ -1,0 +1,12 @@
+{
+  "writeKey": "a7617777471559532688-8056c46428eff7d850877b1778eb037a2871bdf5c162918345ed6a2bbd6391b6",
+  "readKey": "a7617777471559532688-f2bfaaca2502d8049d2c3f3d3ae03b27cc60d57f969fc4da10c1708a33bda343",
+  "upload": {
+    "type": "android",
+    "files": "src/commonMain/composeResources/values/strings.xml"
+  },
+  "download": {
+    "metadataFileJson": "languages.json",
+    "files": "src/commonMain/composeResources/values-${languageCode}/${file}"
+  }
+}

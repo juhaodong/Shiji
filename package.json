@@ -1,0 +1,39 @@
+{
+  "dependencies": {
+    "release-it": "^17.2.1"
+  },
+  "name": "shiji-app",
+  "description": "[![official project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)\r [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)",
+  "version": "0.0.8",
+  "main": "index.js",
+  "devDependencies": {
+    "@release-it/bumper": "^6.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juhaodong/Shiji.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juhaodong/Shiji/issues"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}"
+    },
+    "npm": {
+      "publish": false
+    },
+    "plugins": {
+      "@release-it/bumper": {
+        "out": [
+          "gradle.properties",
+          "iosApp/Configuration/Config.xcconfig",
+          "shared/src/commonMain/kotlin/VersionInfo.kt"
+        ]
+      }
+    }
+  },
+  "homepage": "https://github.com/juhaodong/Shiji#readme"
+}

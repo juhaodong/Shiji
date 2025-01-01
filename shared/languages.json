@@ -1,0 +1,182 @@
+{
+    "projectUrl": "https://localazy.com/p/menu-compose",
+    "baseLocale": "zh-Hans",
+    "languages": [
+        {
+            "language": "ar",
+            "region": "",
+            "script": "",
+            "isRtl": true,
+            "name": "Arabic",
+            "localizedName": "العربية"
+        },
+        {
+            "language": "cs",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Czech",
+            "localizedName": "Čeština"
+        },
+        {
+            "language": "da",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Danish",
+            "localizedName": "Dansk"
+        },
+        {
+            "language": "de",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "German",
+            "localizedName": "Deutsch"
+        },
+        {
+            "language": "en",
+            "region": "US",
+            "script": "",
+            "isRtl": false,
+            "name": "American English",
+            "localizedName": "American English"
+        },
+        {
+            "language": "es",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Spanish",
+            "localizedName": "Español"
+        },
+        {
+            "language": "fr",
+            "region": "FR",
+            "script": "",
+            "isRtl": false,
+            "name": "French (France)",
+            "localizedName": "Français (France)"
+        },
+        {
+            "language": "it",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Italian",
+            "localizedName": "Italiano"
+        },
+        {
+            "language": "ja",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Japanese",
+            "localizedName": "日本語"
+        },
+        {
+            "language": "ko",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Korean",
+            "localizedName": "한국어"
+        },
+        {
+            "language": "nl",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Dutch",
+            "localizedName": "Nederlands"
+        },
+        {
+            "language": "ro",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Romanian",
+            "localizedName": "Română"
+        },
+        {
+            "language": "ru",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Russian",
+            "localizedName": "Русский"
+        },
+        {
+            "language": "tr",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Turkish",
+            "localizedName": "Türkçe"
+        },
+        {
+            "language": "uk",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Ukrainian",
+            "localizedName": "Українська"
+        },
+        {
+            "language": "vi",
+            "region": "",
+            "script": "",
+            "isRtl": false,
+            "name": "Vietnamese",
+            "localizedName": "Tiếng Việt"
+        },
+        {
+            "language": "zh",
+            "region": "CN",
+            "script": "Hans",
+            "isRtl": false,
+            "name": "Chinese (China, Simplified)",
+            "localizedName": "中文 (中国, 简体)"
+        },
+        {
+            "language": "zh",
+            "region": "",
+            "script": "Hans",
+            "isRtl": false,
+            "name": "Simplified Chinese",
+            "localizedName": "简体中文"
+        }
+    ],
+    "files": [
+        {
+            "cdnHash": "19749dea8d31917c7341902095970e5a16dd2439",
+            "file": "strings.xml",
+            "path": "",
+            "library": "",
+            "module": "",
+            "buildType": "",
+            "productFlavors": [
+            ],
+            "cdnFiles": {
+                "ar": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/ar/strings.xml",
+                "cs": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/cs/strings.xml",
+                "da": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/da/strings.xml",
+                "de": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/de/strings.xml",
+                "en_US": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/en-US/strings.xml",
+                "es": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/es/strings.xml",
+                "fr_FR": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/fr-FR/strings.xml",
+                "it": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/it/strings.xml",
+                "ja": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/ja/strings.xml",
+                "ko": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/ko/strings.xml",
+                "nl": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/nl/strings.xml",
+                "ro": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/ro/strings.xml",
+                "ru": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/ru/strings.xml",
+                "tr": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/tr/strings.xml",
+                "uk": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/uk/strings.xml",
+                "vi": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/vi/strings.xml",
+                "zh#Hans": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/zh-Hans/strings.xml",
+                "zh_CN#Hans": "https://delivery.localazy.com/_a77072830536875698490032bba7/_e0/19749dea8d31917c7341902095970e5a16dd2439/zh-Hans-CN/strings.xml"
+            }
+        }
+    ]
+}

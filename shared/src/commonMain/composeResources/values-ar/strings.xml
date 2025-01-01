@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="_Others">آحرون</string>
+  <string name="_AbortSelection">مرفوض</string>
+  <string name="_AboutStartEat">جيد جدًا! سوف تأكل على الفور!</string>
+  <string name="_Accept">خضعت</string>
+  <string name="_ActivationFailedPrompt">فشلت عملية التنشيط! يرجى التحقق مما إذا كان اتصال الشبكة أو رمز التنشيط صحيحًا</string>
+  <string name="_ActivationStatusChecking">جاري التحقق من حالة التنشيط...</string>
+  <string name="_Active">نشيط</string>
+  <string name="_AddPerson">عدد الأشخاص الذين تمت إضافتهم</string>
+  <string name="_All">الجميع</string>
+  <string name="_AllCategory">جميع الفئات</string>
+  <string name="_AllergenSettings">مجموعة المواد المسببة للحساسية</string>
+  <string name="_AlreadyAdded">%1$d %2$s%3$d. %4$s تمت إضافة</string>
+  <string name="_AreYouSureWantToOrder">هل أنت متأكد أنك تريد تقديم طلب؟</string>
+  <string name="_Attention">انتباه</string>
+  <string name="_Back">عودة</string>
+  <string name="_BackToStartPage">العودة إلى الصفحة الرئيسية</string>
+  <string name="_Bill">فواتير</string>
+  <string name="_BillAmount">مبلغ الفاتورة</string>
+  <string name="_BillForTable">الفاتورة – جدول رقم.</string>
+  <string name="_BillRecord">سجل الطلبات</string>
+  <string name="_Buffet">بوفيهات</string>
+  <string name="_CallWaiter">اتصل بالنادل</string>
+  <string name="_CanNotOrderFree">لا يمكنك الاستمرار في طلب المنتجات المجانية حتى الآن، ولكن يمكننا مساعدتك في طلب العناصر المدفوعة أولاً.</string>
+  <string name="_Cancel">إلغاء</string>
+  <string name="_CancelDining">إلغاء وجبة</string>
+  <string name="_CancelReservation">إلغاء الحجز</string>
+  <string name="_CancelReservationHint">هل تريد بالتأكيد إلغاء هذا الحجز؟</string>
+  <string name="_Cancelled">ألغيت</string>
+  <string name="_CardDeviceOwner">محطة البطاقة</string>
+  <string name="_Cart">عربة التسوق</string>
+  <string name="_CartOrderedDrinksAndDishes">الطلب: %1$d مشروب واحد، طبق واحد %2$d</string>
+  <string name="_Cash">يصرف</string>
+  <string name="_ChangeDefaultLanguage">قم بتغيير اللغة الافتراضية</string>
+  <string name="_ChangeLanauge">تغيير اللغة</string>
+  <string name="_ChangeTable">قم بتغيير الجدول</string>
+  <string name="_ChangeTheme">غير الخلفية</string>
+  <string name="_ChangeToDarkMode">تبديل الوضع المظلم</string>
+  <string name="_CheckIn">تحقق في</string>
+  <string name="_CheckMenuInfoWithGuests">تحقق من معلومات الطبق مع العميل</string>
+  <string name="_CheckMode">معاينة</string>
+  <string name="_CheckOutFontText">يرجى إحضار الوسادة الخاصة بك إلى مكتب الاستقبال لتسجيل المغادرة</string>
+  <string name="_CheckOutNow">قم بالدفع الآن</string>
+  <string name="_CheckTheEnteredPriceTipsAreInBrackets">يرجى التحقق من صحة المبلغ الذي تم إدخاله؛ مبلغ الإكرامية بين قوسين.</string>
+  <string name="_Checkout">الخروج</string>
+  <string name="_ChooseATable">حدد الجدول</string>
+  <string name="_ChooseYourConsumeType">يرجى اختيار نوع الوجبة</string>
+  <string name="_ClearAll">مسح الكل</string>
+  <string name="_ClearShoppingCart">هل ترغب في تفريغ عربة التسوق الخاصة بك؟</string>
+  <string name="_ClearText">لقد قمت بالنقر فوق زر عربة التسوق الفارغة. عندما تقوم بإفراغ عربة التسوق الخاصة بك، سيتم تفريغ جميع العناصر الموجودة في عربة التسوق الخاصة بك.</string>
+  <string name="_Close">يغلق</string>
+  <string name="_Combine2Tables">دمج الجدولين</string>
+  <string name="_CompanyBill">شركة</string>
+  <string name="_Confirm">ايجابيا</string>
+  <string name="_ConfirmCheckout">تأكيد عملية الدفع</string>
+  <string name="_ConfirmNumberGuests">يرجى التحقق مرة أخرى من عدد الأشخاص الذين تتناول الطعام معهم:</string>
+  <string name="_ConfirmNumberGuestsHint">إذا لم تكن هناك مشاكل، انقر لبدء تناول الطعام!</string>
+  <string name="_ConfirmService">هل تريد بالتأكيد الاتصال بموفر الخدمة؟</string>
+  <string name="_ConfirmationRequiredWhenPay">هل يتطلب الخروج تأكيدًا</string>
+  <string name="_ContinueToEat">استمر في تناول الطعام</string>
+  <string name="_ContinueWithEnteringDishNumber">استمر في الدخول إلى القائمة</string>
+  <string name="_CountdownNotOver">العد التنازلي لم ينته بعد</string>
+  <string name="_Created">مخلوق</string>
+  <string name="_Current">تيار</string>
+  <string name="_CurrentActivationStatus">حالة التنشيط الحالية</string>
+  <string name="_CurrentHostIP">عنوان IP الخاص بالمضيف الحالي</string>
+  <string name="_CurrentTableName">رقم الجدول الحالي:</string>
+  <string name="_CurrentlyNoTakeaway">لا يوجد الوجبات الجاهزة في الوقت الراهن</string>
+  <string name="_CurrentlyNoTakeawayHint">انقر فوق الزر أدناه لإضافة الوجبات الجاهزة الجديدة</string>
+  <string name="_CustomProducts">منتجات مخصصة</string>
+  <string name="_CustomerBillAmount">مدفوعات العملاء</string>
+  <string name="_CustomizeContent">حدد تخصيص المنتج أدناه؛ تتطلب بعض الخيارات رسومًا إضافية</string>
+  <string name="_DarkMode">الوضع المظلم</string>
+  <string name="_DateAndTime">وقت التاريخ</string>
+  <string name="_Desc">تصوير</string>
+  <string name="_DeviceUUID">معرف الجهاز</string>
+  <string name="_Dine">Dine-in</string>
+  <string name="_Discount">خصم</string>
+  <string name="_DishInputErrorMsg">لا يمكنني إضافة عنصر بسبب</string>
+  <string name="_DishNumberNotFound">لم يتم العثور على رقم الطبق%1$d أطباق</string>
+  <string name="_DoYouNeed">يرجى إعلامي إذا كنت بحاجة...</string>
+  <string name="_Done">مسمر</string>
+  <string name="_DoublePot">قتال مزدوج</string>
+  <string name="_Drinks">مشروبات</string>
+  <string name="_Edit">تغيير</string>
+  <string name="_EditHost">تحرير IP المضيف</string>
+  <string name="_ElectronicBill">إلكتروني</string>
+  <string name="_ElectronicBillSubmittedToEmail">تم إرسال البريد الإلكتروني للفواتير الإلكترونية بنجاح</string>
+  <string name="_Email">بريد إلكتروني</string>
+  <string name="_EnterCustomerTotalPriceAndSelectPaymentMethod">أدخل المبلغ الخاص بالعميل، ثم اختر طريقة الدفع</string>
+  <string name="_EnterDishNumber">يرجى إدخال رقم الطبق</string>
+  <string name="_EnterEBillRecipient">يرجى إدخال عنوان البريد الإلكتروني الذي تريد تلقي الفواتير الإلكترونية</string>
+  <string name="_EnterNote">الرجاء إدخال التعليقات</string>
+  <string name="_EnterPriceForDish">يرجى إدخال سعر الطبق</string>
+  <string name="_EnterUrLoginPW">ادخل رقمك السري</string>
+  <string name="_EnterVoucherNumber">يرجى إدخال رقم الكوبون</string>
+  <string name="_Error">أخطاء</string>
+  <string name="_Favorite">محبوب</string>
+  <string name="_Food">يأكل</string>
+  <string name="_Free">حر</string>
+  <string name="_GaveChangeOut">لقد وجدت الصفر بالفعل وانتهيت</string>
+  <string name="_GetStartedWithAadenPos">ابدأ مع Aaden POS</string>
+  <string name="_GoAndOrder">انهض وقم بتقديم طلب</string>
+  <string name="_GoodWork">عمل جيد،</string>
+  <string name="_HotpotHint">يعتمد الجزء السفلي من الوعاء على المنتج الفعلي</string>
+  <string name="_IamAllergenTo">لدي حساسية من...</string>
+  <string name="_InitApp">جاري تهيئة التطبيق...</string>
+  <string name="_InvalidEnteredTableNumber">رقم الجدول خاطئ</string>
+  <string name="_KeepItUp">استمروا في العمل الجيد!</string>
+  <string name="_Least">أدنى</string>
+  <string name="_LoadingImages">يتم تحميل الصورة</string>
+  <string name="_LoadingImagesHint">قد يستغرق هذا بعض الوقت، يرجى التحلي بالصبر</string>
+  <string name="_LocalizedDescription">وصف التعريب</string>
+  <string name="_Logout">خروج</string>
+  <string name="_Menu">قائمة طعام</string>
+  <string name="_MergeTable">دمج الجدول</string>
+  <string name="_Minute">الدقائق</string>
+  <string name="_Minutes">الدقائق</string>
+  <string name="_ModuleIsNotEnabled">لم يتم تمكين هذه الميزة</string>
+  <string name="_ModuleIsNotEnabledHint">بعد تفعيل وظيفة الحجز، يمكنك التحقق من الحجوزات داخل المتجر على هاتفك المحمول والتحقق من حالة الحجز من خلال رمز QR. يرجى تفعيل هذه الميزة قبل الاستخدام</string>
+  <string name="_MoneyChange">يتغير</string>
+  <string name="_More">أكثر</string>
+  <string name="_Name">اسم</string>
+  <string name="_NeedToEdit">ستحتاج أيضًا إلى إجراء بعض التغييرات:</string>
+  <string name="_NeedToEditHint">بعد البحث، انقر فوق زر التأكيد للعودة إلى الصفحة الرئيسية</string>
+  <string name="_NegativeDiscount">خصم سلبي</string>
+  <string name="_NetworkError">خطأ في الشبكة</string>
+  <string name="_NewCurrency">عملة جديدة</string>
+  <string name="_NewTakeaway">الوجبات الجاهزة الجديدة</string>
+  <string name="_NoAllergen">لا توجد مسببات للحساسية</string>
+  <string name="_NoDesc">لا يوجد وصف</string>
+  <string name="_NoDishFoundWithThisNumber">لم يتم العثور على عناصر لهذه القائمة</string>
+  <string name="_NoReservationFound">لم يتم العثور على أي حجز</string>
+  <string name="_NoReservationHint">قد لا يكون الحجز لهذا اليوم، أو قد يتم إلغاء الحجز.</string>
+  <string name="_NoReservationsYet">لا توجد حجوزات في الوقت الحالي</string>
+  <string name="_NoReservationsYetHint">ربما انتظر وسيحصل عليها</string>
+  <string name="_NoThanks">لا، شكرا لك</string>
+  <string name="_NonSelectedDishes">قم بإلغاء تحديد العنصر المحدد</string>
+  <string name="_NotThisTime">ليس هذه المرة</string>
+  <string name="_Note">ملحوظات</string>
+  <string name="_Notify">يخطر</string>
+  <string name="_Number">رقم</string>
+  <string name="_OK">نعم!</string>
+  <string name="_OnceAcceptedCantReset">بمجرد قبولك، لن تتمكن من إعادة التعيين</string>
+  <string name="_OnlyPaidItemsCanPlaced">يمكنك فقط طلب المنتجات المدفوعة</string>
+  <string name="_Operation">عمليات</string>
+  <string name="_Optional">اختياري</string>
+  <string name="_Order">اطلب وجبة</string>
+  <string name="_OrderAfterCountDown">اطلب تلقائيًا بعد العد التنازلي</string>
+  <string name="_OrderCanceledSuccessfully">تم إلغاء الطلب بنجاح</string>
+  <string name="_OrderCanceledSuccessfullyHint">يمكنك دائمًا الاتصال بموظفي الخدمة مرة أخرى، والبدء في تناول الطعام مرة أخرى، والتطلع إلى الترحيب بك مرة أخرى</string>
+  <string name="_OrderId">طلب رقم</string>
+  <string name="_OrderIsLocked">الطلبية مقفلة</string>
+  <string name="_OrderWithoutPrint">لا طباعة</string>
+  <string name="_OrderingSuccessfully">تم تنفيذ الطلب بنجاح</string>
+  <string name="_Orders">طلب</string>
+  <string name="_OrdinaryBill">عادي</string>
+  <string name="_OriginalTime">الوقت الأصلي</string>
+  <string name="_OtherPaymentMethods">طرق دفع أخرى</string>
+  <string name="_OurStaffComing">سيكون موظفونا هنا قريبًا</string>
+  <string name="_PaymentMethods">طريقة الدفع او السداد</string>
+  <string name="_Person">الناس</string>
+  <string name="_PersonCount">عدد الأشخاص</string>
+  <string name="_Phone">هاتف</string>
+  <string name="_PleaseEnter">الرجاء إدخال...</string>
+  <string name="_PleaseEnterActivationCode">يرجى إدخال رمز التفعيل</string>
+  <string name="_PleaseEnterNewIP">الرجاء إدخال عنوان IP جديد</string>
+  <string name="_PleaseEnterPW">الرجاء إدخال كلمة المرور الخاصة بك</string>
+  <string name="_PleaseEnterTableNumber">أدخل رقم الجدول</string>
+  <string name="_PleaseInputDiscount">يرجى إدخال الخصم</string>
+  <string name="_PleaseInputIp">يرجى إدخال عنوان IP الخاص بالخادم</string>
+  <string name="_PleaseSelectBottomOfPot">يرجى اختيار الجزء السفلي من الوعاء</string>
+  <string name="_PleaseSelectPeople">يرجى تحديد عدد المطاعم</string>
+  <string name="_PleaseWait">يرجى الانتظار لحظة</string>
+  <string name="_Print">مطبوعات</string>
+  <string name="_ProductCustomize">تخصيص المنتج</string>
+  <string name="_ProductInformation">معلومات المنتج</string>
+  <string name="_PurchaseFailed">فشل الخروج</string>
+  <string name="_PurchaseSuccessful">تسجيل خروج ناجح</string>
+  <string name="_ReadyForUseElectronicBill">هل ترغب في استخدام الفواتير الإلكترونية لحماية بيئتنا بشكل أفضل؟</string>
+  <string name="_ReadyForUseElectronicBillHint">نوصي باختيار الفواتير الإلكترونية. يمكن أن يؤدي استخدام الفواتير الإلكترونية للدفع إلى تقليل انبعاثات الكربون بشكل فعال. هذه المرة، يمكن تقليل انبعاثات الكربون بحوالي 1.2 جرام</string>
+  <string name="_ReadyToGo">كل شيء جاهز؟</string>
+  <string name="_ReconciliationMode">وضع التسوية</string>
+  <string name="_Refresh">تحديث</string>
+  <string name="_Reject">رفض</string>
+  <string name="_Reservation">الحجز</string>
+  <string name="_Reserve">محجوزة</string>
+  <string name="_ResetWaitTime">إعادة تعيين وقت الانتظار</string>
+  <string name="_ReturnTable">العودة إلى صفحة الجدول المفتوح</string>
+  <string name="_Round">عدد العجلات:</string>
+  <string name="_RoundCount">نقاط لكل شخص في كل جولة</string>
+  <string name="_RoundTime">مدة كل جولة</string>
+  <string name="_Save">تبخل</string>
+  <string name="_ScanQR">مسح رمز الاستجابة السريعة</string>
+  <string name="_ScanQRForElectronicBill">امسح الرمز لاستلام الفاتورة الإلكترونية</string>
+  <string name="_ScanQRToCheckReservation">امسح رمز QR للتحقق من حالة الحجز</string>
+  <string name="_SearchHere">ابحث هنا...</string>
+  <string name="_SeatPlan">خريطة الجلوس</string>
+  <string name="_SelectAnOrderTypeBelow">اختر نوع الفاتورة من الأسفل</string>
+  <string name="_SelectDeliveryTime">يرجى تحديد وقت التسليم</string>
+  <string name="_SelectHotPot">يرجى اختيار الفوندو الخاص بك</string>
+  <string name="_SelectOne">يرجى اختيار واحدة</string>
+  <string name="_Selected">تم اختياره</string>
+  <string name="_Separate">اطلب حسب الطلب</string>
+  <string name="_ServantName">النوادل</string>
+  <string name="_Service">خدمة</string>
+  <string name="_ServiceContent">بعد المكالمة، يرجى الانتظار بضع دقائق حتى يساعدك موظفو الخدمة لدينا.</string>
+  <string name="_SetDiscount">تخفيض السعر</string>
+  <string name="_SetUpDiscountHint">قم بتعيين خصم رقمي أو نسبة مئوية لهذا الطلب</string>
+  <string name="_SetUpDiscountItemHint">قم بتعيين خصم رقمي أو نسبة مئوية للعناصر المحددة</string>
+  <string name="_Settings">الاجهزة</string>
+  <string name="_ShoppingCart">عربة التسوق</string>
+  <string name="_ShoppingCartIsEmpty">لا توجد منتجات في عربة التسوق.</string>
+  <string name="_ShouldGiveChange">كان يجب أن تتغير</string>
+  <string name="_Shrink">يتقلص</string>
+  <string name="_SinglePot">وعاء مفرد</string>
+  <string name="_SpecialConfig">إعدادات خاصة</string>
+  <string name="_SpicyPot">حساء حار جدا</string>
+  <string name="_SpicyPotVal">12.60 يورو</string>
+  <string name="_StartDining">ابدأ بتناول الطعام</string>
+  <string name="_StartToOrder">ابدأ الطلب</string>
+  <string name="_Status">حالة</string>
+  <string name="_SubmitOrder">ضع طلبًا</string>
+  <string name="_Subtotal">المجاميع الفرعية</string>
+  <string name="_Sure">ايجابيا</string>
+  <string name="_SureAboutAcceptingOrder">هل أنت متأكد أنك تريد قبول الطلب؟</string>
+  <string name="_SureWantCancelOrder">هل أنت متأكد أنك تريد إلغاء الطلب؟</string>
+  <string name="_SureWantCancelOrderHint">قد يكون لدينا أيضًا قوائم أخرى لتختار من بينها، إذا كانت لديك أي أسئلة حول الأسعار، فلا تتردد في الاتصال بموظفينا</string>
+  <string name="_SureWantOrder">هل أنت متأكد أنك تريد تقديم طلب؟</string>
+  <string name="_SureWantOrderHint">بمجرد تأكيد الطلب، سيتم إرسال أغراضك إلى المطبخ للتحضير.</string>
+  <string name="_SureYouWantPay">هل أنت متأكد أنك تريد الدفع؟</string>
+  <string name="_SureYouWantPayHint">بمجرد تحديده، لا يمكن تغييره</string>
+  <string name="_SystemSetting">إعدادات النظام</string>
+  <string name="_Table">طاولة</string>
+  <string name="_TableName">الجدول رقم.</string>
+  <string name="_Takeaway">Takeaway</string>
+  <string name="_ThankYou">شكرا لك على الزيارة</string>
+  <string name="_ThanksForProtectEarth">شكرًا جزيلاً على مساهمتك في إنقاذ الكوكب 🌏 🚀</string>
+  <string name="_Tip">نصائح</string>
+  <string name="_TodaySummary">ملخص اليوم</string>
+  <string name="_Total">المجاميع</string>
+  <string name="_TotalPriceIncludingVAT">السعر الإجمالي يشمل الضرائب</string>
+  <string name="_TotalTip">بقشيش</string>
+  <string name="_TransferThisTableToAnOtherTable">انقل هذا المكتب إلى آخر</string>
+  <string name="_TransferUrSelectedDishesToAnOtherTable">انقل الطبق المحدد إلى جدول آخر</string>
+  <string name="_TriplePot">ثلاث معارك</string>
+  <string name="_TurnTable">قرص دوار</string>
+  <string name="_UHaveNoPermissionsToEnterTable">غير مصرح له بالاستمرار</string>
+  <string name="_ValueCantBeLowerThenReal">لا يجوز أن يكون الخصم أقل من السعر الأصلي للمنتج</string>
+  <string name="_VerifyComplete">اكتمل التحقق</string>
+  <string name="_View">معاينة</string>
+  <string name="_ViewMealRules">اطّلع على قواعد تناول الطعام</string>
+  <string name="_VoucherNumberNotValid">رقم الكوبون غير صالح</string>
+  <string name="_WaitMistake">انتظر، لقد طلبت الشيء الخطأ</string>
+  <string name="_WaitTimeText"> سيتعين عليك الانتظار بضع %s ثوانٍ قبل متابعة الطلب، هل تحتاج إلى إرسال الطلب تلقائيًا بعد اكتمال العد التنازلي؟ يرجى ملاحظة أنه بعد ضبط العناصر في عربة التسوق الخاصة بك، سيتم إلغاء طلب الإرسال التلقائي تلقائيًا.</string>
+  <string name="_Waiting">جار التحميل..</string>
+  <string name="_WantToCheckout">الدفع</string>
+  <string name="_Welcome">أهلا بك!</string>
+  <string name="_WelcomeTo">مرحبًا بكم في مينينج مالاتانج</string>
+  <string name="_Withdrawal">توقف عن الطهي</string>
+  <string name="_YourTable">رقم الجدول الخاص بك</string>
+</resources>
