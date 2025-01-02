@@ -60,6 +60,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import modules.utils.isValidEmail
 import org.jetbrains.compose.resources.painterResource
+import shijiapp.shared.generated.resources.memo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,13 +121,13 @@ fun LoginPage(
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painterResource(Res.drawable.tea_time),
+                    painterResource(Res.drawable.memo),
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth().aspectRatio(16 / 9f),
                     contentScale = ContentScale.Fit
                 )
                 SmallSpacer()
-                Text("欢迎使用Aaden管家", style = MaterialTheme.typography.titleLarge)
+                Text("每日食记", style = MaterialTheme.typography.titleLarge)
 
             }
             Column(modifier = Modifier.padding(16.dp, vertical = 8.dp)) {
