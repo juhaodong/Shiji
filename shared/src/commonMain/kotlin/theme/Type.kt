@@ -3,12 +3,12 @@
 package theme
 
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources.Satoshi_Black
-import aadenadmin.shared.generated.resources.Satoshi_Bold
-import aadenadmin.shared.generated.resources.Satoshi_Light
-import aadenadmin.shared.generated.resources.Satoshi_Medium
-import aadenadmin.shared.generated.resources.Satoshi_Regular
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.Satoshi_Black
+import shijiapp.shared.generated.resources.Satoshi_Bold
+import shijiapp.shared.generated.resources.Satoshi_Light
+import shijiapp.shared.generated.resources.Satoshi_Medium
+import shijiapp.shared.generated.resources.Satoshi_Regular
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle

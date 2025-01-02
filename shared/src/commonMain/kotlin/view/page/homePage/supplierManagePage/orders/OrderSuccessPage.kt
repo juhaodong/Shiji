@@ -1,7 +1,7 @@
 package view.page.homePage.supplierManagePage.orders
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources.video_calling
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.video_calling
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

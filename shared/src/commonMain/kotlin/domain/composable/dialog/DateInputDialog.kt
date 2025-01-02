@@ -2,8 +2,8 @@
 
 package domain.composable.dialog
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources._OK
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._OK
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.DatePicker

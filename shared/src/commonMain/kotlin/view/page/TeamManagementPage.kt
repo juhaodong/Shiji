@@ -3,9 +3,9 @@
 package view.page
 
 import LocalDialogManager
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources.no_image
-import aadenadmin.shared.generated.resources.stretching
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.no_image
+import shijiapp.shared.generated.resources.stretching
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

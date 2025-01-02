@@ -3,8 +3,8 @@
 package view.page.loginPage
 
 import LocalDialogManager
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources.tea_time
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.tea_time
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

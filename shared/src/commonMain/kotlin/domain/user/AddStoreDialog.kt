@@ -1,7 +1,7 @@
 package domain.user
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources._PleaseEnterActivationCode
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._PleaseEnterActivationCode
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

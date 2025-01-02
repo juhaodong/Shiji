@@ -1,8 +1,8 @@
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources._ChangeTheme
-import aadenadmin.shared.generated.resources._Close
-import aadenadmin.shared.generated.resources._DarkMode
-import aadenadmin.shared.generated.resources._SystemSetting
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._ChangeTheme
+import shijiapp.shared.generated.resources._Close
+import shijiapp.shared.generated.resources._DarkMode
+import shijiapp.shared.generated.resources._SystemSetting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -1,8 +1,8 @@
 package domain.composable.dialog
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources.stretching
-import aadenadmin.shared.generated.resources.tea_time
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.stretching
+import shijiapp.shared.generated.resources.tea_time
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

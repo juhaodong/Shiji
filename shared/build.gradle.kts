@@ -5,12 +5,14 @@ import groovy.xml.XmlUtil
 
 
 plugins {
+
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+
     id("kotlinx-serialization")
     id("de.jensklingenberg.ktorfit") version "2.2.0"
     alias(libs.plugins.google.services) apply false

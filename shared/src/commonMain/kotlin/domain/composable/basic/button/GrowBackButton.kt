@@ -1,7 +1,7 @@
 package domain.composable.basic.button
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources._Back
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._Back
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

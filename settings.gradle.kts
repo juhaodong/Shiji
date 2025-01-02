@@ -1,4 +1,4 @@
-rootProject.name = "Shiji App"
+rootProject.name = "ShijiApp"
 
 include(":androidApp")
 include(":shared")

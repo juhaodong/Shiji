@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     kotlin("multiplatform")
     id("com.android.application")
@@ -31,12 +33,11 @@ android {
             keyPassword = "asd123456"
         }
     }
-    packagingOptions {
+    fun Packaging.() {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "/META-INF/versions/9/previous-compilation-data.bin"
         }
-
     }
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
     namespace = "io.shiji.app"

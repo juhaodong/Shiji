@@ -1,8 +1,8 @@
 package domain.composable.dialog.inputDialog
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources._OK
-import aadenadmin.shared.generated.resources._PleaseEnter
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._OK
+import shijiapp.shared.generated.resources._PleaseEnter
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons

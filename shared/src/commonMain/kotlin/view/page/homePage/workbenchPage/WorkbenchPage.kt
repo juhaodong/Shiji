@@ -1,8 +1,8 @@
 package view.page.homePage.workbenchPage
 
 import LocalDialogManager
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources.no_image
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.no_image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

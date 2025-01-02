@@ -2,10 +2,10 @@
 
 package view.page.activatePage
 
-import aadenadmin.shared.generated.resources.Res
-import aadenadmin.shared.generated.resources._CurrentHostIP
-import aadenadmin.shared.generated.resources._EditHost
-import aadenadmin.shared.generated.resources._NetworkError
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._CurrentHostIP
+import shijiapp.shared.generated.resources._EditHost
+import shijiapp.shared.generated.resources._NetworkError
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
