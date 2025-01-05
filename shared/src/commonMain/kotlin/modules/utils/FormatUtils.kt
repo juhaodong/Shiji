@@ -239,6 +239,11 @@ object FormatUtils {
         return toPriceDisplay(this)
     }
 
+    fun BigDecimal.displayWithUnit(unit: String = ""): String {
+        return this.copy(decimalMode = DecimalMode.US_CURRENCY).toPlainString() + unit
+    }
+
+
     fun BigDecimal.displayWhenNotZero(): String {
         return if (this.compareTo(BigDecimal.ZERO) != 0) this.toPriceDisplay() else ""
     }

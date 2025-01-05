@@ -57,12 +57,6 @@ fun OfflineDialog(identityVM: IdentityVM) {
             SmallSpacer(32)
             Text("非常抱歉😟", style = MaterialTheme.typography.titleLarge)
             SmallSpacer(4)
-            Text(
-                "本时间段的数据尚未与ACS同步。" +
-                        (if (identityVM.currentStore?.ngrokOnline == true) "您可能选择了较长时间段的数据，这些数据需要一段时间跟ACS同步，请稍后再试。"
-                        else "您的门店内的机器似乎不在线，因此我们没有办法自动同步这一时间段的数据，请在门店内的机器在线后重新尝试。"),
-                style = MaterialTheme.typography.bodyMedium
-            )
             SmallSpacer(32)
             FilledTonalButton(onClick = {
                 identityVM.currentlyOffline = false

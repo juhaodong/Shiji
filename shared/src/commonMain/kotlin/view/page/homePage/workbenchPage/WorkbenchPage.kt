@@ -85,9 +85,9 @@ fun WorkbenchPage(
         val initialMenuList =
             listOfNotNull(
                 MenuModel.ActionMenuItem("门店管理") {
-                    identityVM.showStoreManagementDialog = true
+                    identityVM.showProfileDialog = true
                 },
-                identityVM.withAuth(UserStoreAuth.Admin) {
+                identityVM.withAuth() {
                     MenuModel.ActionMenuItem("工作台") { toAdminPage() }
                 },
                 MenuModel.ActionMenuItem("组织管理") { toTeamManagePage() },

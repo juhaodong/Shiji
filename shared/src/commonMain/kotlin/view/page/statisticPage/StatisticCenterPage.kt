@@ -62,7 +62,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -177,19 +176,6 @@ fun StatisticCenterPage(statisticVM: StatisticVM, identityVM: IdentityVM, backTo
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.secondary
                     )
-                    Text(
-                        "当前门店：" + (identityVM.currentStore?.storeName ?: '-'),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                    if (identityVM.currentStore?.ngrokOnline == false) {
-                        Text(
-                            "由于实时数据不可用，您看到的数据可能会缺少目前未被同步的部分内容。",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-
                     SmallSpacer(8)
                     if (!statisticVM.loading) {
                         when (selectedTab) {

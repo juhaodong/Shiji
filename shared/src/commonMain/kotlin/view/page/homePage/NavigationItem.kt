@@ -8,8 +8,8 @@ import androidx.compose.material.icons.rounded.Widgets
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class NavigationItem(val icon: ImageVector, val label: String) {
-    DataCenter(Icons.Rounded.Equalizer, "数据中心"),
-    Inventory(Icons.Rounded.Inventory, "库存状况"),
-    Supplier(Icons.AutoMirrored.Rounded.Chat, "供应商"),
-    Workbench(Icons.Rounded.Widgets, "工作台")
+    DataCenter(Icons.Rounded.Equalizer, "营养概况"),
+    Inventory(Icons.Rounded.Inventory, "食记"),
+    Supplier(Icons.AutoMirrored.Rounded.Chat, "健康建议"),
+    Workbench(Icons.Rounded.Widgets, "我的")
 }

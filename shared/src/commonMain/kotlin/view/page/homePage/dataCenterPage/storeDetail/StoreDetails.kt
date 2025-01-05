@@ -2,12 +2,9 @@
 
 package view.page.homePage.dataCenterPage.storeDetail
 
-import ChangePercentageDisplay
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,24 +13,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowRight
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.PlusOne
 import androidx.compose.material.icons.filled.Report
-import androidx.compose.material.icons.rounded.OpenInNew
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,252 +39,227 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.SystemFontFamily
 import androidx.compose.ui.unit.dp
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import com.raedghazal.kotlinx_datetime_ext.now
 import domain.composable.basic.button.BaseIconButton
 import domain.composable.basic.cards.BaseCardHeader
-import domain.composable.basic.cards.BaseContentCard
-import domain.composable.basic.cards.NoBackgroundContentCard
-import domain.composable.basic.layout.BaseSurface
 import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
-import domain.composable.basic.layout.pa
-import domain.composable.basic.layout.px
-import domain.composable.basic.layout.py
 import domain.composable.basic.wrapper.NoContentProvider
-import domain.composable.chart.BarData
-import domain.composable.chart.ChartDisplay
-import domain.composable.chart.ChartType
 import domain.user.IdentityVM
-import domain.user.StoreVM
+import domain.user.NutritionVM
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import modules.utils.FormatUtils.sumOfB
-import modules.utils.FormatUtils.toPriceDisplay
-import modules.utils.toPercentageDisplay
-import qrgenerator.qrkitpainter.text
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.plus
+import modules.utils.FormatUtils.displayWithUnit
+import modules.utils.dateOnly
+import view.page.homePage.dataCenterPage.NutritionSummary
 import view.page.homePage.dataCenterPage.storeDetail.commonReports.CommonReportItem
 import view.page.homePage.dataCenterPage.storeDetail.commonReports.commonReports
 import view.page.homePage.dataCenterPage.storeDetail.dashboard.DashboardCardList
-import view.page.homePage.dataCenterPage.storeDetail.dashboard.DashboardCardType
-import view.page.homePage.dataCenterPage.storeDetail.dashboard.TableStatusGrid
 import view.page.homePage.dataCenterPage.storeDetail.dashboard.TwoItemsPerRowGrid
 
 
 @Composable
-fun StoreDetails(identityVM: IdentityVM, storeVM: StoreVM, toStatisticCenter: () -> Unit) {
+fun StoreDetails(identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCenter: () -> Unit) {
     val pullRefreshState = rememberPullToRefreshState()
     var selectedDate by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
-    val store = identityVM.currentStore
+    val store = identityVM.currentProfile
+    val info = nutritionVM.info
 
     PullToRefreshBox(
-        isRefreshing = storeVM.loading,
+        isRefreshing = nutritionVM.loading,
         state = pullRefreshState,
         modifier = Modifier.fillMaxSize(),
         onRefresh = {
-            storeVM.showDataForIndex(selectedDate)
+            nutritionVM.showDataForIndex(selectedDate)
             scope.launch {
                 pullRefreshState.animateToHidden()
             }
         }) {
-        if (store != null) {
+        if (store != null && info != null) {
+            val actual = info.actualNutrition
+            val recommendation = info.nutritionRecommendation
             Column(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                     .verticalScroll(state = rememberScrollState())
             ) {
-                SmallSpacer(36)
-                val unpaid = storeVM.tableList.sumOfB {
-                    it.totalPrice ?: BigDecimal.ZERO
-                }
-                val sales =
-                    (storeVM.dashboardData.find { card -> card.type == DashboardCardType.TOTAL_REVENUE }?.currentValue
-                        ?: BigDecimal.ZERO) + (if (selectedDate == 0) unpaid else BigDecimal.ZERO)
+                Column {
+                    val totalMinus = store.currentWeight.toFloat() - store.targetWeight.toFloat()
 
-                val text = if (selectedDate == 0) "预期营业额" else "营业额"
-                Column() {
-                    BaseVCenterRow(modifier = Modifier.pa(8).clickable {
-                        toStatisticCenter()
-                    }) {
-                        Column(modifier = Modifier) {
-                            BaseVCenterRow {
-                                Text(
-                                    text = text,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = LocalContentColor.current.copy(alpha = 0.6f)
-                                )
-                            }
+                    val restDate = store.weightLossCycle - LocalDate.now()
+                        .daysUntil(store.startDate.plus(store.weightLossCycle, DateTimeUnit.DAY))
+                    val currentWeight =
+                        store.currentWeight.toFloat() - restDate / store.weightLossCycle.toFloat() * totalMinus
 
-                            Row(
-                                verticalAlignment = Alignment.Bottom
-                            ) {
-                                if (storeVM.loading) {
-                                    Text(
-                                        "...", style = MaterialTheme.typography.headlineLarge
-                                    )
-
-                                } else {
-                                    Text(
-                                        text = sales.toPriceDisplay(),
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                }
-                            }
-                            SmallSpacer()
-                            val sales =
-                                (storeVM.dashboardData.find { card -> card.type == DashboardCardType.TOTAL_REVENUE }?.previousPeriodChange
-                                    ?: BigDecimal.ZERO)
-                            ChangePercentageDisplay(
-                                sales,
-                                contentColor = LocalContentColor.current
-                            )
-
-                        }
-                        GrowSpacer()
-                        val dataOptions = listOf("实时数据", "昨日数据")
-                        val selectedData = dataOptions[selectedDate]
-                        BaseSurface(onClick = {
-                            selectedDate = (selectedDate + 1) % dataOptions.size
-                        }, color = Color.Transparent) {
-                            BaseVCenterRow(modifier = Modifier.px(4).py(8)) {
-                                SmallSpacer(4)
-                                Text(selectedData, style = MaterialTheme.typography.bodySmall)
-                                SmallSpacer(2)
-                                Icon(imageVector = Icons.Default.ArrowDropDown, null)
-                            }
-                        }
-                    }
-                    val list =
-                        storeVM.dashboardData.find { card -> card.type == DashboardCardType.TOTAL_REVENUE }?.changesInTime?.map { dTO ->
-                            BarData(
-                                dTO.currentValue.floatValue(false), dTO.getLabel()
-                            )
-                        }
-                    if (list != null) {
-                        ChartDisplay(
-                            modifier = Modifier.fillMaxWidth().aspectRatio(16 / 9f),
-                            outData = list,
-                            chartType = ChartType.Line,
-                            sparkChart = true
-                        )
-
-                    }
-
-                }
-                if (selectedDate == 0 && storeVM.tableList.isNotEmpty() && store.ngrokOnline && storeVM.tableList.size != 10) {
-                    SmallSpacer(48)
-                    NoBackgroundContentCard(
-                        title = "店内实时营业情况",
-                        subtitle = "此时此刻",
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically // Vertically align elements
                     ) {
-                        NoContentProvider(
-                            storeVM.tableList.isNotEmpty() && store.ngrokOnline, minHeight = 100
+
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.inverseSurface
+                            ), shape = MaterialTheme.shapes.extraSmall
                         ) {
-                            Column(modifier = Modifier) {
-                                TableStatusGrid(
-                                    tables = storeVM.tableList.filter { it.sectionId != 6 },
-                                    takeawayOrders = storeVM.tableList.filter { it.sectionId == 6 }.size
-                                )
-                            }
-                            SmallSpacer(16)
-                            Row(
-                                verticalAlignment = Alignment.Bottom,
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column {
-                                    Text("待收款", style = MaterialTheme.typography.labelSmall)
-                                    Text(
-                                        storeVM.tableList.sumOfB {
-                                            it.totalPrice ?: BigDecimal.ZERO
-                                        }.toPriceDisplay(),
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                                Column {
-                                    Text(
-                                        "活跃订单数", style = MaterialTheme.typography.labelSmall
-                                    )
-                                    Text(
-                                        storeVM.tableList.filter { it.usageStatus == 1 }.size.toString(),
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                                Column {
-                                    Text(
-                                        "实时开台率", style = MaterialTheme.typography.labelSmall
-                                    )
-                                    Text(
-                                        storeVM.tableList.filter { it.usageStatus == 1 && it.sectionId != 6 }.size.toBigDecimal()
-                                            .divide(
-                                                storeVM.tableList.filter { it.sectionId != 6 }.size.toBigDecimal()
-                                                    .coerceAtLeast(
-                                                        BigDecimal.ONE
-                                                    ), DecimalMode.US_CURRENCY
-                                            ).toPercentageDisplay(),
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                            }
+                            Text(
+                                text = "今日目标",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                            )
+                        }
+                        SmallSpacer()
+                        Text(
+                            currentWeight.toBigDecimal(decimalMode = DecimalMode.US_CURRENCY)
+                                .toPlainString() + "kg🏋️‍",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        GrowSpacer()
+                        SmallSpacer()
+                        Text(
+                            "剩余${(store.weightLossCycle - restDate)}天",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        SmallSpacer()
+                        IconButton(
+                            onClick = { identityVM.toggleProfileDialog() },
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Apps,
+                                contentDescription = null
+                            )
+                        }
+
+                    }
+                }
+
+                SmallSpacer(16)
+
+                Column {
+                    val over = actual.totalCalories > recommendation.recommendedCalories
+                    Text(
+                        "本日摄入卡路里",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LocalContentColor.current.copy(alpha = 0.6f)
+                    )
+                    SmallSpacer(2)
+                    BaseVCenterRow {
+                        Text(
+                            actual.totalCalories.displayWithUnit("kcal"),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = if (over) MaterialTheme.colorScheme.error else LocalContentColor.current
+                        )
+                        GrowSpacer()
+                        Text(
+                            recommendation.recommendedCalories.displayWithUnit("kcal"),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = LocalContentColor.current.copy(alpha = 0.6f)
+                        )
+                    }
+                    val max = maxOf(
+                        info.actualNutrition.totalCalories,
+                        info.nutritionRecommendation.recommendedCalories
+                    )
+
+                    SmallSpacer(4)
+                    LinearProgressIndicator(
+                        progress = {
+                            actual.totalCalories.floatValue(false) / max.floatValue(false)
+                                .coerceAtLeast(1f)
+                        },
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        color = if (over) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    )
+                }
+                SmallSpacer(16)
+                BaseVCenterRow {
+                    Column(modifier = Modifier.weight(1f)) {
+                        val over = actual.averageQualityRating < recommendation.minimumQualityRating
+                        Text(
+                            "食物质量评分",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LocalContentColor.current.copy(alpha = 0.6f)
+                        )
+                        SmallSpacer(2)
+                        BaseVCenterRow {
+                            Text(
+                                actual.averageQualityRating.toString(),
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = if (over) MaterialTheme.colorScheme.error else LocalContentColor.current
+                            )
+                            Text(
+                                "/" + recommendation.minimumQualityRating.toString(),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = LocalContentColor.current.copy(alpha = 0.6f)
+                            )
+                        }
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            "上次用餐",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LocalContentColor.current.copy(alpha = 0.6f)
+                        )
+                        SmallSpacer(2)
+                        BaseVCenterRow {
+                            Text(
+                                "两小时前😓",
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                            Text(
+                                "(有点能吃",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = LocalContentColor.current.copy(alpha = 0.6f)
+                            )
 
                         }
                     }
                 }
+
+
+
 
 
                 SmallSpacer(48)
-                Row(modifier = Modifier.padding(start = 8.dp)) {
+                Row(modifier = Modifier) {
                     BaseCardHeader("更多的详细数据", "继续浏览", noPadding = true, large = true) {
                         BaseIconButton(icon = Icons.Default.ArrowForward) {
                             toStatisticCenter()
                         }
                     }
                 }
-                SmallSpacer()
-                NoContentProvider(storeVM.dashboardData.isNotEmpty()) {
-                    DashboardCardList(storeVM.dashboardData)
-                }
                 SmallSpacer(16)
 
-                LaunchedEffect(storeVM.dashboardData) {
-                    if (!storeVM.dashboardData.isEmpty()) {
-                        if (storeVM.dashboardData.first().currentValue == BigDecimal.ZERO) {
-                            selectedDate = 1
-                        }
-                    }
+                NutritionSummary(
+                    nutritionVM.info!!.nutritionRecommendation, nutritionVM.info!!.actualNutrition
+                )
 
-                }
+                SmallSpacer(16)
 
 
-            }
-            LaunchedEffect(store.deviceId to selectedDate) {
-                storeVM.showDataForIndex(selectedDate)
             }
         }
 
     }
 
-}
-
-@Composable
-private fun CommonReportSection() {
-    Surface(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        shape = MaterialTheme.shapes.medium,
-        tonalElevation = 3.dp
-    ) {
-        Column(modifier = Modifier) {
-            BaseCardHeader("常用报表", "查看常用报表", Icons.Filled.Report)
-            TwoItemsPerRowGrid(items = commonReports) { report ->
-                CommonReportItem(report = report) {}
-            }
-            SmallSpacer()
-        }
+    LaunchedEffect(true) {
+        nutritionVM.showDataForIndex(0)
     }
+
+
 }
 

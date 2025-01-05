@@ -35,62 +35,6 @@ import modules.utils.FormatUtils.toPriceDisplay
 
 
 @Composable
-fun StoreCard(
-    store: UserStoreDetailsDTO,
-    isSelected: Boolean,
-    loading: Boolean,
-    ratio: BigDecimal = BigDecimal.ZERO,
-    onClick: () -> Unit
-) {
-    val backgroundColor =
-        if (ratio == BigDecimal.ZERO)
-            MaterialTheme.colorScheme.surfaceContainerHigh else
-            MaterialTheme.colorScheme.primary.copy(alpha = ratio.floatValue(false))
-    Surface(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(56.dp),
-        color = backgroundColor,
-        contentColor = if (ratio < 0.5f) Color.Black else Color.White,
-        shape = MaterialTheme.shapes.small,
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-
-            Text(
-                text = store.storeName,
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 2,  // Ensure the text occupies up to two lines
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = if (isSelected) FontWeight.Black else FontWeight.Normal,
-                lineHeight = 11.sp,
-                modifier = Modifier.height(26.dp)
-            )
-            if (loading) {
-                Text(
-                    text = "数据更新中...",
-                    style = MaterialTheme.typography.labelSmall,
-                )
-            } else {
-                BaseVCenterRow {
-                    Icon(
-                        Icons.Default.Wallet,
-                        contentDescription = null,
-                        modifier = Modifier.size(12.dp)
-                    )
-                    SmallSpacer(4)
-                    Text(
-                        text = store.salesToday.toPriceDisplay(),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = if (isSelected) FontWeight.Black else FontWeight.Medium,
-                    )
-                }
-
-            }
-
-        }
-    }
-}
-
-@Composable
 fun StoreList(identityVM: IdentityVM) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -115,29 +59,10 @@ fun StoreList(identityVM: IdentityVM) {
                 )
             }
 
-            Text(
-                text = " ${identityVM.currentStore?.storeName?.split("<BR>")?.first() ?: "-"}",
-                style = MaterialTheme.typography.bodySmall,
-            )
-            GrowSpacer()
-            Card(
-                modifier = Modifier, // Reduced padding
-                colors = CardDefaults.cardColors(
-                    containerColor = if (identityVM.currentStore?.ngrokOnline == true) MaterialTheme.colorScheme.inverseSurface
-                    else MaterialTheme.colorScheme.error
-                ), shape = MaterialTheme.shapes.extraSmall
-            ) {
-                Text(
-                    text = if (identityVM.currentStore?.ngrokOnline == true) "实时数据在线" else "离线/实时数据不可用",
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold, // Make "当前门店" bold
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                )
-            }
 
             SmallSpacer()
             IconButton(
-                onClick = { identityVM.toggleStoreList() }, modifier = Modifier.size(28.dp)
+                onClick = { identityVM.toggleProfileDialog() }, modifier = Modifier.size(28.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Apps,

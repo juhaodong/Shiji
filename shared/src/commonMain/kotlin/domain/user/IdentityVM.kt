@@ -20,6 +20,10 @@ import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.messaging.messaging
 import domain.composable.dialog.basic.DialogViewModel
+import domain.composable.dialog.form.TextFormField
+import domain.food.user.UserProfile
+import domain.food.user.UserProfileEditDTO
+import domain.food.user.UserProfileService
 import domain.inventory.InventoryRepository
 import domain.supplier.model.ShopInfo
 import domain.user.model.AcceptInviteRequestDTO
@@ -27,8 +31,6 @@ import domain.user.model.ChangeAuthRequestDTO
 import domain.user.model.CreateInviteRequestDTO
 import domain.user.model.InviteInfoDTO
 import domain.user.model.UserShopUserDTO
-import domain.user.model.UserStoreAuth
-import domain.user.model.UserStoreDetailsDTO
 import domain.user.model.selectableAuth
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -51,7 +53,8 @@ class IdentityVM(
     val globalSettingManager: GlobalSettingManager,
     val activationService: ActivationService,
     val dialogViewModel: DialogViewModel,
-    val inventoryRepository: InventoryRepository
+    val inventoryRepository: InventoryRepository,
+    val userProfileService: UserProfileService
 ) : ViewModel() {
     var showCreateInviteDialog by mutableStateOf(false)
     var selectedAuth = mutableStateListOf(*selectableAuth.toTypedArray())
@@ -153,8 +156,7 @@ class IdentityVM(
                 )
             }
             if (selectedUid == currentUser!!.uid) {
-                refreshStore()
-                enterStore(globalSettingManager.selectedDeviceId)
+                refreshProfile()
             }
             refreshUserList()
             showUpdateAuthDialog = false
@@ -162,8 +164,8 @@ class IdentityVM(
         }
     }
 
-    fun <R> withAuth(auth: UserStoreAuth, content: () -> R): R? {
-        if (haveAuth(auth)) {
+    fun <R> withAuth(content: () -> R): R? {
+        if (haveAuth()) {
             return content()
         }
         return null
@@ -172,27 +174,28 @@ class IdentityVM(
 
     var currentlyOffline by mutableStateOf(false)
     var showComingSoon by mutableStateOf(false)
-    var showStoreManagementDialog by mutableStateOf(false)
+    var showProfileDialog by mutableStateOf(false)
 
     var currentUser: FirebaseUser? by mutableStateOf(null)
     val fireBaseAuth = Firebase.auth
-    val userStoreList = mutableStateListOf<UserStoreDetailsDTO>()
+
+
     var userLoadFinished by mutableStateOf(false)
-    var storeListLoading by mutableStateOf(false)
-    fun toggleStoreList() {
-        if (storeListLoading) {
+    var userProfileLoading by mutableStateOf(false)
+    fun toggleProfileDialog() {
+        if (userProfileLoading) {
             return
         }
         viewModelScope.launch {
-            if (!showStoreManagementDialog) {
-                storeListLoading = true
-                refreshStore()
-                storeListLoading = false
+            if (!showProfileDialog) {
+                userProfileLoading = true
+                refreshProfile()
+                userProfileLoading = false
             }
 
 
         }
-        showStoreManagementDialog = !showStoreManagementDialog
+        showProfileDialog = !showProfileDialog
 
     }
 
@@ -256,22 +259,17 @@ class IdentityVM(
     }
 
     var bindingStore by mutableStateOf(false)
-    var currentStore by mutableStateOf<UserStoreDetailsDTO?>(null)
-    var addStoreOpt by mutableStateOf(false)
-    var currentAuth by mutableStateOf(listOf<UserStoreAuth>())
-    fun enterStore(deviceId: String) {
-        globalSettingManager.selectedDeviceId = deviceId
-        currentStore = userStoreList.find { it.deviceId == deviceId }
-        currentAuth = currentStore!!.auth
-    }
+    var currentProfile by mutableStateOf<UserProfile?>(null)
+    var updateUserProfileDialog by mutableStateOf(false)
 
-    fun haveAuth(auth: UserStoreAuth): Boolean {
-        return currentAuth.contains(auth) || currentAuth.contains(UserStoreAuth.Owner)
+
+    fun haveAuth(): Boolean {
+        return true
     }
 
     @Composable
-    fun displayWithAuth(auth: UserStoreAuth, content: @Composable () -> Unit) {
-        if (haveAuth(auth)) {
+    fun displayWithAuth(content: @Composable () -> Unit) {
+        if (haveAuth()) {
             content()
         }
     }
@@ -288,7 +286,7 @@ class IdentityVM(
                         firebaseUid = currentUser!!.uid
                     )
                 )
-                refreshStore()
+                refreshProfile()
                 addingStore = null
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -299,14 +297,13 @@ class IdentityVM(
     }
 
 
-    private suspend fun refreshStore() {
+    private suspend fun refreshProfile() {
 
         if (currentUser != null) {
-            val newStore = storeService.getStoreDetails(currentUser!!.uid)
-            userStoreList.clear()
-            userStoreList.addAll(newStore)
+            currentProfile =
+                SafeRequestScope.handleRequest { userProfileService.getUserProfile(currentUser!!.uid) }
         } else {
-            userStoreList.clear()
+            currentProfile = null
         }
     }
 
@@ -316,7 +313,7 @@ class IdentityVM(
         currentUser = user
         Napier.e { "authStateChanged" }
         Napier.e { user?.email.toString() }
-        refreshStore()
+        refreshProfile()
         if (user != null) {
             try {
                 currentFCMToken = Firebase.messaging.getToken()
@@ -354,6 +351,52 @@ class IdentityVM(
         userLoadFinished = true
     }
 
+    fun updateProfile(callBack: () -> Unit) {
+        viewModelScope.launch {
+            val profileEditDTO = dialogViewModel.showFormDialog<UserProfileEditDTO>(
+                TextFormField(keyName = "nickname", label = "昵称"),
+                TextFormField(
+                    keyName = "birthDate",
+                    label = "生日",
+                    placeHolder = "请按照YYYY-MM-DD填写"
+                ),
+                TextFormField(
+                    keyName = "exerciseIntensity",
+                    label = "锻炼强度",
+                    placeHolder = ""
+                ),
+                TextFormField(
+                    keyName = "height",
+                    label = "身高(cm)",
+                    placeHolder = ""
+                ),
+                TextFormField(
+                    keyName = "currentWeight",
+                    label = "当前体重(kg)",
+                    placeHolder = ""
+                ),
+                TextFormField(
+                    keyName = "targetWeight",
+                    label = "目标体重(kg)",
+                    placeHolder = ""
+                ),
+                TextFormField(
+                    keyName = "weightLossCycle",
+                    label = "减重周期(天)",
+                    placeHolder = ""
+                ),
+                title = "修改个人资料",
+            )
+            val profile = profileEditDTO.toUserProfile(currentUser!!.uid)
+            SafeRequestScope.handleRequest {
+                userProfileService.createOrUpdateUserProfile(profile)
+            }
+            refreshProfile()
+            callBack()
+        }
+
+    }
+
     var qrHaveResult by mutableStateOf(false)
     var shopInfo by mutableStateOf<ShopInfo?>(null)
     var scanResult by mutableStateOf("")
@@ -370,8 +413,8 @@ class IdentityVM(
                 }
 
                 if (res != null) {
-                    refreshStore()
-                    addStoreOpt = false
+                    refreshProfile()
+                    updateUserProfileDialog = false
                     globalDialogManager.successAnd(
                         "" +
                                 "绑定成功，作为门店的主用户，您可以邀请其他用户加入门店。" +
@@ -426,7 +469,7 @@ class IdentityVM(
         viewModelScope.launch {
             currentUser?.updateProfile(
                 displayName =
-                dialogViewModel.showInput("请输入新的用户名")
+                    dialogViewModel.showInput("请输入新的用户名")
             )
             currentUser = fireBaseAuth.currentUser
         }

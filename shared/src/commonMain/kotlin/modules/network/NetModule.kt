@@ -19,6 +19,8 @@ import de.jensklingenberg.ktorfit.Ktorfit
 import de.jensklingenberg.ktorfit.ktorfit
 import domain.dashboard.DashboardReportService
 import domain.dashboard.createDashboardReportService
+import domain.food.user.NutritionService
+import domain.food.user.UserProfileService
 import domain.inventory.InventoryService
 import domain.inventory.createInventoryService
 import domain.purchaseOrder.PurchaseOrderService
@@ -49,8 +51,8 @@ import kotlin.uuid.Uuid
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER)
 annotation class AppScope
 
-const val cloudUrl = "https://cloud-v2.aaden.io"
-//const val cloudUrl = "http://192.168.178.22"
+//const val cloudUrl = "https://cloud-v2.aaden.io"
+const val cloudUrl = "http://192.168.178.41"
 
 var startRoute = RouteName.HOME
 
@@ -75,6 +77,16 @@ abstract class NetModule {
     @Provides
     protected fun reservationService(ktorfit: Ktorfit): ReservationService =
         ktorfit.createReservationService()
+
+    @AppScope
+    @Provides
+    protected fun userProfileService(ktorfit: Ktorfit): UserProfileService =
+        ktorfit.create()
+
+    @AppScope
+    @Provides
+    protected fun nutritionService(ktorfit: Ktorfit): NutritionService =
+        ktorfit.create()
 
     @AppScope
     @Provides

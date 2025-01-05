@@ -8,15 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -80,8 +76,7 @@ import domain.supplier.OrderBookViewModel
 import domain.supplier.SupplierViewModel
 import domain.user.AddStoreDialog
 import domain.user.IdentityVM
-import domain.user.StoreVM
-import domain.user.model.UserStoreAuth
+import domain.user.NutritionVM
 import io.github.skeptick.libres.LibresSettings
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
@@ -165,7 +160,7 @@ fun AppBase(
     inventoryViewModel: InventoryViewModel,
     supplierViewModel: SupplierViewModel,
     purchaseOrderVM: PurchaseOrderVM,
-    storeVM: StoreVM,
+    nutritionVM: NutritionVM,
     navHostController: NavHostController = rememberNavController(),
 ) {
 
@@ -225,8 +220,7 @@ fun AppBase(
     LaunchedEffect(identityVM.userLoadFinished to identityVM.currentUser) {
         if (identityVM.userLoadFinished) {
             if (identityVM.currentUser != null) {
-                if (identityVM.userStoreList.isNotEmpty() && identityVM.userStoreList.any { it.deviceId == globalSettingManager.selectedDeviceId }) {
-                    identityVM.enterStore(globalSettingManager.selectedDeviceId)
+                if (identityVM.currentProfile != null) {
                     goto(startRoute, clearAllStack = true)
 
                 } else {
@@ -410,27 +404,12 @@ fun AppBase(
 
                                 val uriHandler = LocalUriHandler.current
 
-                                LaunchedEffect(identityVM.currentStore) {
+                                LaunchedEffect(identityVM.currentProfile) {
                                     // Ensure the selected item is valid based on user auth
-                                    val availableItems = NavigationItem.entries.filter {
-                                        when (it) {
-                                            NavigationItem.DataCenter -> identityVM.haveAuth(
-                                                UserStoreAuth.DataCenter
-                                            )
+                                    val availableItems = NavigationItem.entries
 
-                                            NavigationItem.Inventory -> identityVM.haveAuth(
-                                                UserStoreAuth.Inventory
-                                            )
-
-                                            NavigationItem.Supplier -> identityVM.haveAuth(
-                                                UserStoreAuth.Supplier
-                                            )
-
-                                            NavigationItem.Workbench -> true // Workbench is always available
-                                        }
-                                    }
-                                    if (storeVM.selectedNavigationItem !in availableItems) {
-                                        storeVM.selectedNavigationItem =
+                                    if (nutritionVM.selectedNavigationItem !in availableItems) {
+                                        nutritionVM.selectedNavigationItem =
                                             availableItems.firstOrNull() ?: NavigationItem.Workbench
                                     }
                                 }
@@ -438,38 +417,22 @@ fun AppBase(
                                 Scaffold(bottomBar = {
                                     NavigationBar {
                                         NavigationItem.entries.forEach { item ->
-                                            // Conditionally display items based on user auth
-                                            if (when (item) {
-                                                    NavigationItem.DataCenter -> identityVM.haveAuth(
-                                                        UserStoreAuth.DataCenter
-                                                    )
 
-                                                    NavigationItem.Inventory -> identityVM.haveAuth(
-                                                        UserStoreAuth.Inventory
+                                            NavigationBarItem(
+                                                selected = nutritionVM.selectedNavigationItem == item,
+                                                onClick = {
+                                                    nutritionVM.selectedNavigationItem = item
+                                                },
+                                                icon = {
+                                                    Icon(
+                                                        item.icon,
+                                                        contentDescription = item.label
                                                     )
-
-                                                    NavigationItem.Supplier -> identityVM.haveAuth(
-                                                        UserStoreAuth.Supplier
-                                                    )
-
-                                                    NavigationItem.Workbench -> true
-                                                }
-                                            ) {
-                                                NavigationBarItem(
-                                                    selected = storeVM.selectedNavigationItem == item,
-                                                    onClick = {
-                                                        storeVM.selectedNavigationItem = item
-                                                    },
-                                                    icon = {
-                                                        Icon(
-                                                            item.icon,
-                                                            contentDescription = item.label
-                                                        )
-                                                    },
-                                                    label = { Text(item.label) }
-                                                )
-                                            }
+                                                },
+                                                label = { Text(item.label) }
+                                            )
                                         }
+
                                     }
                                 }) { innerPadding ->
                                     Column(
@@ -477,10 +440,10 @@ fun AppBase(
                                             .padding(innerPadding).fillMaxSize()
                                             .background(MaterialTheme.colorScheme.background),
                                     ) {
-                                        when (storeVM.selectedNavigationItem) {
+                                        when (nutritionVM.selectedNavigationItem) {
                                             NavigationItem.DataCenter -> DataCenterPage(
                                                 identityVM = identityVM,
-                                                storeVM = storeVM,
+                                                nutritionVM = nutritionVM,
                                                 toStatisticCenter = {
                                                     goto(RouteName.STATISTIC_CENTER)
                                                 })
@@ -497,7 +460,7 @@ fun AppBase(
                                                         purchaseOrderVM.selectedStatus = it
                                                         goto(RouteName.Supplier.ORDER_LIST)
                                                     } else {
-                                                        storeVM.selectedNavigationItem =
+                                                        nutritionVM.selectedNavigationItem =
                                                             NavigationItem.Supplier
                                                     }
                                                 },
@@ -707,7 +670,6 @@ fun AppBase(
 
                             composable(RouteName.ACTIVATE) {
                                 ActivatePage(identityVM) {
-                                    identityVM.enterStore(deviceId = it)
                                     goto(RouteName.HOME, clearAllStack = true)
                                 }
                             }
@@ -747,9 +709,7 @@ fun AppBase(
                         showLanguageDialog = false
                     }
                     AddStoreDialog(identityVM)
-                    StoreManagementDialog(identityVM) {
-                        goto(RouteName.HOME, clearAllStack = true)
-                    }
+                    StoreManagementDialog(identityVM)
                     dialogViewModel.formSchemaList.forEach {
                         BaseFormDialog(it, dialogViewModel)
                     }

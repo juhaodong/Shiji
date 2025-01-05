@@ -5,7 +5,6 @@ package view.page
 import LocalDialogManager
 import shijiapp.shared.generated.resources.Res
 import shijiapp.shared.generated.resources.no_image
-import shijiapp.shared.generated.resources.stretching
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.InsertInvitation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Checkbox
@@ -26,7 +24,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,11 +42,9 @@ import domain.composable.basic.button.BaseIconButton
 import domain.composable.basic.button.MainButton
 import domain.composable.basic.cards.BaseCardHeader
 import domain.composable.basic.cards.LabelText
-import domain.composable.basic.layout.BaseSurface
 import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
-import domain.composable.basic.layout.py
 import domain.composable.basic.wrapper.PageLoadingProvider
 import domain.composable.dialog.basic.BeautifulDialog
 import domain.composable.dialog.basic.DialogViewModel
@@ -60,7 +55,6 @@ import domain.user.model.UserShopUserDTO
 import domain.user.model.UserStoreAuth
 import domain.user.model.selectableAuth
 import modules.utils.isValidEmail
-import modules.utils.timeToNow
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -96,7 +90,7 @@ fun TeamManagePage(identityVM: IdentityVM, dialogViewModel: DialogViewModel, bac
                         }) {
                             Icon(Icons.Default.Search, contentDescription = null)
                         }
-                        identityVM.displayWithAuth(UserStoreAuth.Owner) {
+                        identityVM.displayWithAuth() {
                             IconButton(onClick = {
                                 identityVM.startInvite()
                             }) {
@@ -112,7 +106,7 @@ fun TeamManagePage(identityVM: IdentityVM, dialogViewModel: DialogViewModel, bac
         Column(modifier = Modifier.padding(paddingValues)) {
             PageLoadingProvider(
                 loading = identityVM.userListLoading,
-                refreshKey = identityVM.currentStore,
+                refreshKey = identityVM.currentProfile,
                 onRefresh = { identityVM.refreshUserList() },
                 haveContent = identityVM.userList.isNotEmpty()
             ) {
@@ -124,7 +118,7 @@ fun TeamManagePage(identityVM: IdentityVM, dialogViewModel: DialogViewModel, bac
                         UserListDisplay(
                             it
                         ) {
-                            if (identityVM.haveAuth(UserStoreAuth.Owner)) {
+                            if (identityVM.haveAuth()) {
                                 dialogViewModel.runInScope {
                                     val normalOptions = listOf(
                                         SelectOption("🚫 移除用户", "移除用户"),

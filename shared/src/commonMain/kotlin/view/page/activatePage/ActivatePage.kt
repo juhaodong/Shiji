@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import domain.user.IdentityVM
-import view.StoreManagementFragment
+import view.UserProfileFragment
 
 @Composable
-fun ActivatePage(identityVM: IdentityVM, selectDeviceId: (String) -> Unit) {
+fun ActivatePage(identityVM: IdentityVM, profileUpdated: () -> Unit) {
 
     Scaffold(
     ) { innerPadding ->
@@ -23,7 +23,7 @@ fun ActivatePage(identityVM: IdentityVM, selectDeviceId: (String) -> Unit) {
             modifier = Modifier.consumeWindowInsets(innerPadding).padding(innerPadding)
                 .padding(16.dp).fillMaxSize(),
         ) {
-            StoreManagementFragment(identityVM, selectDeviceId)
+            UserProfileFragment(identityVM, profileUpdated)
 
         }
 

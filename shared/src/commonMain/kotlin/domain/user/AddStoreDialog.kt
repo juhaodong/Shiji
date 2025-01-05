@@ -61,8 +61,8 @@ enum class AddStoreTab {
 @Composable
 fun AddStoreDialog(identityVM: IdentityVM) {
     val hapticFeedback = LocalHapticFeedback.current
-    BeautifulDialog(identityVM.addStoreOpt, noPadding = true, onDismissRequest = {
-        identityVM.addStoreOpt = false
+    BeautifulDialog(identityVM.updateUserProfileDialog, noPadding = true, onDismissRequest = {
+        identityVM.updateUserProfileDialog = false
     }) {
         var selectedTab by remember { mutableStateOf(AddStoreTab.QrCode) }
         PrimaryTabRow(
@@ -103,14 +103,14 @@ fun AddStoreDialog(identityVM: IdentityVM) {
                     OTPLayout(stringResource(Res.string._PleaseEnterActivationCode), checkOTP = {
                         identityVM.checkOpt(it)
                     }) {
-                        identityVM.addStoreOpt = false
+                        identityVM.updateUserProfileDialog = false
                     }
                 }
             }
 
             AddStoreTab.QrCode -> {
-                LaunchedEffect(identityVM.addStoreOpt) {
-                    if (identityVM.addStoreOpt) {
+                LaunchedEffect(identityVM.updateUserProfileDialog) {
+                    if (identityVM.updateUserProfileDialog) {
                         identityVM.qrHaveResult = false
                     }
                 }

@@ -1,6 +1,5 @@
 package view.page.homePage.inventoryPage.dashboard
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,7 +30,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.materialkolor.ktx.harmonize
-import domain.composable.basic.PageBackgroundBrush
 import domain.composable.basic.cards.BaseCardList
 import domain.composable.basic.cards.BaseContentCard
 import domain.composable.basic.cards.LabelText
@@ -76,7 +74,7 @@ fun InventoryDashboard(
 
             BaseCardList(
                 loading = inventoryViewModel.dashboardLoading,
-                refreshKey = identityVM.currentStore,
+                refreshKey = identityVM.currentProfile,
                 onRefresh = {
                     inventoryViewModel.loadDashboardData()
                 }) {

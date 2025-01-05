@@ -46,7 +46,7 @@ fun BaseCardHeader(
             }
             Text(
                 text = title,
-                style = if (large) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = if (large) FontWeight.Black else FontWeight.Bold,
             )
             if (!large && subtitle.isNotBlank()) {

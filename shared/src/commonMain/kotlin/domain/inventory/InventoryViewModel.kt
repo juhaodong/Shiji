@@ -80,12 +80,6 @@ class InventoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 activateLoading = true
-                inventoryRepository.saveSetting(
-                    InventorySettingDTO(
-                        name = identityVM.currentStore?.storeName ?: "-",
-                        shopId = globalSettingManager.selectedDeviceId.toLong()
-                    )
-                )
                 refreshInventoryStatus()
             } catch (e: Exception) {
                 globalDialogManager.confirmAnd(
