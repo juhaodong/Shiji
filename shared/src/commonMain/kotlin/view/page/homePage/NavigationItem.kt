@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class NavigationItem(val icon: ImageVector, val label: String) {
     DataCenter(Icons.Rounded.Equalizer, "营养概况"),
-    Inventory(Icons.Rounded.Inventory, "食记"),
-    Supplier(Icons.AutoMirrored.Rounded.Chat, "健康建议"),
+    DailyRecord(Icons.Rounded.Inventory, "食记"),
     Workbench(Icons.Rounded.Widgets, "我的")
 }

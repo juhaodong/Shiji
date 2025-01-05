@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BaseSurface(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surface,
+    color: Color = MaterialTheme.colorScheme.surfaceContainer,
     content: @Composable () -> Unit
 ) {
     Surface(

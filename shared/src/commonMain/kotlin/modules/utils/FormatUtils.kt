@@ -10,6 +10,7 @@ import com.raedghazal.kotlinx_datetime_ext.LocalDateTimeFormatter
 import com.raedghazal.kotlinx_datetime_ext.Locale
 import com.raedghazal.kotlinx_datetime_ext.minus
 import com.raedghazal.kotlinx_datetime_ext.now
+import io.github.skeptick.libres.LibresSettings
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
@@ -63,6 +64,7 @@ fun LocalDateTime.toHourDisplay(): String {
 
 
 fun LocalDateTime.timeToNow(): String {
+
     return HumanReadable.timeAgo(this.toInstant(TimeZone.currentSystemDefault()))
 }
 

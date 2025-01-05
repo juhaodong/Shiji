@@ -21,6 +21,7 @@ import androidx.compose.material.icons.outlined.RestaurantMenu
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,17 +43,17 @@ import modules.utils.FormatUtils.displayWithUnit
 import modules.utils.FormatUtils.toPriceDisplay
 import view.page.homePage.dataCenterPage.storeDetail.StoreDetails
 import view.page.homePage.dataCenterPage.storeDetail.dashboard.TwoItemsPerRowGrid
+import view.page.homePage.dataCenterPage.storeList.StoreList
 
 
 @Composable
 fun DataCenterPage(
-    identityVM: IdentityVM,
-    nutritionVM: NutritionVM,
-    toStatisticCenter: () -> Unit
+    identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCenter: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        StoreList(identityVM)
         StoreDetails(
             identityVM = identityVM,
             nutritionVM = nutritionVM,
@@ -64,8 +65,7 @@ fun DataCenterPage(
 
 @Composable
 fun NutritionSummary(
-    recommendation: NutritionRecommendation,
-    actual: AggregatedActualIntake
+    recommendation: NutritionRecommendation, actual: AggregatedActualIntake
 ) {
     val nutrientItems = listOf(
         NutrientItem(
@@ -75,64 +75,56 @@ fun NutritionSummary(
             unit = "kcal",
             icon = Icons.Outlined.RestaurantMenu,
             color = Color(0xFFE91E63)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "蛋白质",
             recommended = recommendation.recommendedProtein,
             actual = actual.totalProtein,
             unit = "g",
             icon = Icons.Outlined.Egg,
             color = Color(0xFF9C27B0)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "脂肪",
             recommended = recommendation.recommendedFat,
             actual = actual.totalFat,
             unit = "g",
             icon = Icons.Outlined.Fastfood,
             color = Color(0xFF673AB7)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "碳水化合物",
             recommended = recommendation.recommendedCarbohydrates,
             actual = actual.totalCarbohydrates,
             unit = "g",
             icon = Icons.Outlined.Grain,
             color = Color(0xFF3F51B5)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "膳食纤维",
             recommended = recommendation.recommendedDietaryFiber,
             actual = actual.totalDietaryFiber,
             unit = "g",
             icon = Icons.Filled.TrackChanges,
             color = Color(0xFF2196F3)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "蔬菜",
             recommended = recommendation.recommendedVegetables,
             actual = actual.totalVegetables,
             unit = "g",
             icon = Icons.Filled.Restaurant,
             color = Color(0xFF03A9F4)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "水果",
             recommended = recommendation.recommendedFruits,
             actual = actual.totalFruits,
             unit = "g",
             icon = Icons.Outlined.ShoppingCart,
             color = Color(0xFF00BCD4)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "饮水量",
             recommended = recommendation.recommendedWaterIntake,
             actual = actual.totalWaterIntake,
             unit = "ml",
             icon = Icons.Filled.WaterDrop,
             color = Color(0xFF009688)
-        ),
-        NutrientItem(
+        ), NutrientItem(
             label = "钠",
             recommended = recommendation.recommendedSodium,
             actual = actual.totalSodium,
@@ -145,7 +137,7 @@ fun NutritionSummary(
         items = nutrientItems,
         horizontalSpacing = 16.dp,
         contentPadding = PaddingValues(0.dp),
-        verticalSpacing = 16.dp
+        verticalSpacing = 24.dp
     ) { item ->
 
         NutrientRow(item = item)
@@ -176,7 +168,11 @@ fun NutrientRow(item: NutrientItem) {
                 style = MaterialTheme.typography.bodyMedium,
             )
             GrowSpacer()
-            Text(item.unit, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                item.recommended.displayWithUnit().dropLast(3),
+                style = MaterialTheme.typography.labelSmall,
+                color = LocalContentColor.current.copy(0.4f)
+            )
 
         }
         SmallSpacer()
@@ -192,14 +188,10 @@ fun NutrientRow(item: NutrientItem) {
         }
         Row {
             Text(
-                item.actual.displayWithUnit(),
+                item.actual.displayWithUnit(item.unit),
                 style = MaterialTheme.typography.titleLarge,
                 color = if (over) MaterialTheme.colorScheme.error else item.color
             )
         }
-        Text(
-            item.recommended.displayWithUnit(""),
-            style = MaterialTheme.typography.labelSmall
-        )
     }
 }

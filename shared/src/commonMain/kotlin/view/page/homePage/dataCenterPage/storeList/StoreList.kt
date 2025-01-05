@@ -26,23 +26,35 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.DecimalMode
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import com.raedghazal.kotlinx_datetime_ext.now
+import dataLayer.repository.DishStore.store
 import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.user.IdentityVM
 import domain.user.model.UserStoreDetailsDTO
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.plus
 import modules.utils.FormatUtils.toPriceDisplay
 
 
 @Composable
 fun StoreList(identityVM: IdentityVM) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    val store = identityVM.currentProfile
+    if(store != null){
+        val totalMinus = store.currentWeight.toFloat() - store.targetWeight.toFloat()
 
+        val restDate = store.weightLossCycle - LocalDate.now()
+            .daysUntil(store.startDate.plus(store.weightLossCycle, DateTimeUnit.DAY))
+        val currentWeight =
+            store.currentWeight.toFloat() - restDate / store.weightLossCycle.toFloat() * totalMinus
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween, // Arrange elements with space between
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically // Vertically align elements
         ) {
 
@@ -52,24 +64,35 @@ fun StoreList(identityVM: IdentityVM) {
                 ), shape = MaterialTheme.shapes.extraSmall
             ) {
                 Text(
-                    text = "门店",
+                    text = "今日目标",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                 )
             }
-
-
+            SmallSpacer()
+            Text(
+                currentWeight.toBigDecimal(decimalMode = DecimalMode.US_CURRENCY)
+                    .toPlainString() + "kg🏋️‍",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            GrowSpacer()
+            SmallSpacer()
+            Text(
+                "剩余${(store.weightLossCycle - restDate)}天",
+                style = MaterialTheme.typography.bodySmall
+            )
             SmallSpacer()
             IconButton(
-                onClick = { identityVM.toggleProfileDialog() }, modifier = Modifier.size(28.dp)
+                onClick = { identityVM.toggleProfileDialog() },
+                modifier = Modifier.size(28.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Apps,
                     contentDescription = null
                 )
             }
-        }
 
+        }
     }
 }

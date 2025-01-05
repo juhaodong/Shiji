@@ -76,11 +76,7 @@ class GlobalSettingManager {
     private val defaultValue = "192.168.168.1"
     var ip by StringPD(defaultValue, this)
 
-    var lang: String by StringPD("DE", this)
-
-
-    var deviceUUID: String by StringPD("", this)
-    var activationCode: String by StringPD("", this)
+    var lang: String by StringPD("ZH", this)
     var selectedDeviceId: String by StringPD("", this)
 
 
@@ -100,9 +96,6 @@ class GlobalSettingManager {
         return "http://$ip/"
     }
 
-    fun getEndPoint(): String {
-        return getUrl() + "PHP/"
-    }
 
     fun getImgUrl(): String {
         return getResourceUrl() + "dishImg/"

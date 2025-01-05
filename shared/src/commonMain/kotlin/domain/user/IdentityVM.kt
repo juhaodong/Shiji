@@ -4,14 +4,13 @@ package domain.user
 
 
 import VersionInfo
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raedghazal.kotlinx_datetime_ext.now
+import com.vanniktech.locale.Locale
 import dataLayer.serivce.ActivationService
 import dataLayer.serivce.FrontendLogDTO
 import dev.gitlive.firebase.Firebase
@@ -27,12 +26,8 @@ import domain.food.user.UserProfileService
 import domain.inventory.InventoryRepository
 import domain.supplier.model.ShopInfo
 import domain.user.model.AcceptInviteRequestDTO
-import domain.user.model.ChangeAuthRequestDTO
-import domain.user.model.CreateInviteRequestDTO
-import domain.user.model.InviteInfoDTO
-import domain.user.model.UserShopUserDTO
-import domain.user.model.selectableAuth
 import io.github.aakira.napier.Napier
+import io.github.skeptick.libres.LibresSettings
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -42,7 +37,6 @@ import modules.GlobalSettingManager
 import modules.network.AppScope
 import modules.network.SafeRequestScope
 import modules.utils.globalDialogManager
-import modules.utils.isValidEmail
 import kotlin.uuid.ExperimentalUuidApi
 
 
@@ -56,113 +50,7 @@ class IdentityVM(
     val inventoryRepository: InventoryRepository,
     val userProfileService: UserProfileService
 ) : ViewModel() {
-    var showCreateInviteDialog by mutableStateOf(false)
-    var selectedAuth = mutableStateListOf(*selectableAuth.toTypedArray())
-    var emailInput by mutableStateOf("")
-    var inviteLoading by mutableStateOf(false)
-    fun startInvite() {
-        emailInput = ""
-        selectedAuth.clear()
-        selectedAuth.addAll(selectableAuth)
-        showCreateInviteDialog = true
-    }
 
-    fun submitInvite() {
-        if (emailInput.isValidEmail()) {
-            viewModelScope.launch {
-                inviteLoading = true
-                SafeRequestScope.handleRequest {
-                    storeService.createInvite(
-                        CreateInviteRequestDTO(
-                            deviceId = globalSettingManager.selectedDeviceId,
-                            userId = currentUser!!.uid,
-                            auth = selectedAuth,
-                            targetEmail = emailInput
-                        )
-                    )
-                }
-                refreshUserList()
-                showCreateInviteDialog = false
-                inviteLoading = false
-            }
-        } else {
-            globalDialogManager.confirmAnd("麻烦您仔细检查一下嘛", "您输入的电子邮箱不对啊！！")
-        }
-    }
-
-    fun deleteInvite(activeCode: String) {
-        viewModelScope.launch {
-            SafeRequestScope.handleRequest {
-                storeService.deleteInvite(
-                    InviteInfoDTO(
-                        deviceId = globalSettingManager.selectedDeviceId,
-                        activeCode
-                    )
-                )
-            }
-            refreshUserList()
-        }
-    }
-
-    fun refreshInvite(activeCode: String) {
-        viewModelScope.launch {
-            SafeRequestScope.handleRequest {
-                storeService.refreshInvite(
-                    InviteInfoDTO(
-                        deviceId = globalSettingManager.selectedDeviceId,
-                        activeCode
-                    )
-                )
-            }
-            refreshUserList()
-        }
-    }
-
-    suspend fun getPortalLink(): String? {
-        return SafeRequestScope.handleRequest {
-            activationService.getPortalLink(currentUser?.uid!!)
-        }
-    }
-
-    fun removeUser(uid: String) {
-        viewModelScope.launch {
-            SafeRequestScope.handleRequest {
-                storeService.unbindStore(uid, globalSettingManager.selectedDeviceId)
-                refreshUserList()
-            }
-        }
-    }
-
-    var showUpdateAuthDialog by mutableStateOf(false)
-    var selectedUid by mutableStateOf("")
-    fun startUpdateAuth(uid: String) {
-        selectedUid = uid
-        val user = userList.find { it.firebaseUid == uid } ?: return
-        selectedAuth.clear()
-        selectedAuth.addAll(user.auth)
-        showUpdateAuthDialog = true
-    }
-
-    fun submitAuthChange() {
-        viewModelScope.launch {
-            inviteLoading = true
-            SafeRequestScope.handleRequest {
-                storeService.changeAuth(
-                    ChangeAuthRequestDTO(
-                        deviceId = globalSettingManager.selectedDeviceId,
-                        selectedUid,
-                        selectedAuth
-                    )
-                )
-            }
-            if (selectedUid == currentUser!!.uid) {
-                refreshProfile()
-            }
-            refreshUserList()
-            showUpdateAuthDialog = false
-            inviteLoading = false
-        }
-    }
 
     fun <R> withAuth(content: () -> R): R? {
         if (haveAuth()) {
@@ -265,13 +153,6 @@ class IdentityVM(
 
     fun haveAuth(): Boolean {
         return true
-    }
-
-    @Composable
-    fun displayWithAuth(content: @Composable () -> Unit) {
-        if (haveAuth()) {
-            content()
-        }
     }
 
 
@@ -447,24 +328,6 @@ class IdentityVM(
         }
     }
 
-
-    var userList by mutableStateOf(listOf<UserShopUserDTO>())
-    var userListLoading by mutableStateOf(false)
-    var userListSearching by mutableStateOf(false)
-    var userListSearchText by mutableStateOf("")
-
-    fun filteredUserList(): List<UserShopUserDTO> {
-        return userList.filter { dto ->
-            !userListSearching || userListSearchText.isBlank() || listOf(
-                dto.displayName,
-                dto.email,
-                dto.firebaseUid
-            ).any {
-                it?.contains(userListSearchText, true) == true
-            }
-        }
-    }
-
     fun updateUserName() {
         viewModelScope.launch {
             currentUser?.updateProfile(
@@ -486,20 +349,9 @@ class IdentityVM(
     }
 
 
-    fun refreshUserList() {
-        userListLoading = true
-        viewModelScope.launch {
-            SafeRequestScope.handleRequest {
-                userList = storeService.getUsersByDeviceId(globalSettingManager.selectedDeviceId)
-            }
-
-            userListLoading = false
-        }
-    }
-
-
     init {
         viewModelScope.launch {
+            LibresSettings.languageCode = "zh"
             fireBaseAuth.authStateChanged.collect {
                 onUserUpdated(it)
             }

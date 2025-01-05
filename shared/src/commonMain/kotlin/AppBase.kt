@@ -70,7 +70,6 @@ import domain.composable.dialog.form.BaseFormDialog
 import domain.composable.dialog.inputDialog.InputDialog
 import domain.composable.dialog.selection.SimpleSelectionDialog
 import domain.inventory.InventoryViewModel
-import domain.inventory.model.OrderStatus
 import domain.purchaseOrder.PurchaseOrderVM
 import domain.supplier.OrderBookViewModel
 import domain.supplier.SupplierViewModel
@@ -92,11 +91,11 @@ import theme.AadenMenuTheme
 import theme.CurrentTheme
 import theme.colorsSets
 import view.StoreManagementDialog
-import view.page.TeamManagePage
+
 import view.page.activatePage.ActivatePage
 import view.page.homePage.NavigationItem
 import view.page.homePage.dataCenterPage.DataCenterPage
-import view.page.homePage.inventoryPage.dashboard.InventoryDashboard
+import view.page.homePage.inventoryPage.dashboard.RecordPage
 import view.page.homePage.inventoryPage.resource.StorageItemListPage
 import view.page.homePage.supplierManagePage.orderBook.OrderBookDetailPage
 import view.page.homePage.supplierManagePage.orderBook.OrderMenuPage
@@ -108,7 +107,6 @@ import view.page.homePage.supplierManagePage.orders.OrderDetailsPage
 import view.page.homePage.supplierManagePage.orders.OrderListPage
 import view.page.homePage.supplierManagePage.orders.OrderSignPage
 import view.page.homePage.supplierManagePage.orders.OrderSuccessPage
-import view.page.homePage.supplierManagePage.supplierlistpage.SupplierListPage
 import view.page.homePage.supplierManagePage.supplierlistpage.findSupplierPage.FindSupplierPage
 import view.page.homePage.workbenchPage.WorkbenchPage
 import view.page.loginPage.LoginPage
@@ -192,7 +190,7 @@ fun AppBase(
     }
     fun resetDefaultLanguage() {
         scope.launch {
-            changeLanguage(globalSettingManager.lang)
+            changeLanguage("zh")
         }
     }
     LaunchedEffect(true) {
@@ -448,45 +446,11 @@ fun AppBase(
                                                     goto(RouteName.STATISTIC_CENTER)
                                                 })
 
-                                            NavigationItem.Inventory -> InventoryDashboard(
+                                            NavigationItem.DailyRecord -> RecordPage(
                                                 identityVM = identityVM,
-                                                inventoryViewModel = inventoryViewModel,
-                                                toStorageItemList = {
-                                                    inventoryViewModel.storageOperationType = null
-                                                    goto(RouteName.INVENTORY_LIST)
-                                                },
-                                                toOrderList = {
-                                                    if (it != null) {
-                                                        purchaseOrderVM.selectedStatus = it
-                                                        goto(RouteName.Supplier.ORDER_LIST)
-                                                    } else {
-                                                        nutritionVM.selectedNavigationItem =
-                                                            NavigationItem.Supplier
-                                                    }
-                                                },
-                                                toStorageOperation = {
-                                                    inventoryViewModel.storageOperationType = it
-                                                    goto(RouteName.INVENTORY_LIST)
-                                                },
+                                                nutritionVM
                                             )
 
-                                            NavigationItem.Supplier -> SupplierListPage(
-                                                inventoryViewModel = inventoryViewModel,
-
-
-                                                orderBookViewModel = orderBookViewModel,
-                                                toFindSupplierPage = {
-                                                    goto(RouteName.Supplier.FIND_SUPPLIER)
-                                                },
-                                                toOrderListPage = {
-                                                    purchaseOrderVM.selectedStatus =
-                                                        OrderStatus.Active
-                                                    goto(RouteName.Supplier.ORDER_LIST)
-                                                },
-                                                enterSupplierDetail = {
-                                                    orderBookViewModel.chooseOrderBook(it.orderBook.id)
-                                                    goto(RouteName.Supplier.ORDER_BOOK_DETAIL)
-                                                })
 
                                             NavigationItem.Workbench -> WorkbenchPage(
                                                 identityVM = identityVM,
@@ -689,11 +653,6 @@ fun AppBase(
                                 }
                             }
 
-                            composable(RouteName.TeamManage) {
-                                TeamManagePage(identityVM, dialogViewModel) {
-                                    navHostController.popBackStack()
-                                }
-                            }
                         }
                     }
                     InputDialog(dialogViewModel.inputDialogRepository)

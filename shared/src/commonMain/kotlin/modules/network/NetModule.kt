@@ -19,6 +19,7 @@ import de.jensklingenberg.ktorfit.Ktorfit
 import de.jensklingenberg.ktorfit.ktorfit
 import domain.dashboard.DashboardReportService
 import domain.dashboard.createDashboardReportService
+import domain.food.user.FoodLogService
 import domain.food.user.NutritionService
 import domain.food.user.UserProfileService
 import domain.inventory.InventoryService
@@ -81,6 +82,11 @@ abstract class NetModule {
     @AppScope
     @Provides
     protected fun userProfileService(ktorfit: Ktorfit): UserProfileService =
+        ktorfit.create()
+
+    @AppScope
+    @Provides
+    protected fun foodLogService(ktorfit: Ktorfit): FoodLogService =
         ktorfit.create()
 
     @AppScope
