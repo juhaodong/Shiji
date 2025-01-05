@@ -1,3 +1,3 @@
 object VersionInfo {
-    const val name = "0.0.6"
+    const val name = "0.0.7"
 }
