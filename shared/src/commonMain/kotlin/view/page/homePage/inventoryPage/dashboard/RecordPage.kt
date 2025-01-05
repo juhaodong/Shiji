@@ -64,6 +64,7 @@ import domain.composable.basic.layout.SmallSpacer
 import domain.composable.basic.layout.pa
 import domain.composable.basic.wrapper.PageLoadingProvider
 import domain.composable.dialog.basic.BeautifulDialog
+import domain.inventory.model.storageItem.imageWithProxy
 import domain.user.IdentityVM
 import domain.user.NutritionVM
 import kotlinx.coroutines.launch
@@ -119,7 +120,7 @@ fun RecordPage(
                             }) {
                             Column(modifier = Modifier) {
                                 AsyncImage(
-                                    it.imageUrl, null, modifier = Modifier.fillMaxWidth().clip(
+                                    it.imageUrl.imageWithProxy(), null, modifier = Modifier.fillMaxWidth().clip(
                                         MaterialTheme.shapes.large
                                     ), contentScale = ContentScale.FillWidth
                                 )

@@ -44,6 +44,7 @@ import domain.composable.dialog.basic.BeautifulDialog
 import domain.food.user.AggregatedActualIntake
 import domain.food.user.FoodLog
 import domain.food.user.NutritionRecommendation
+import domain.inventory.model.storageItem.imageWithProxy
 import modules.utils.timeToNow
 import view.page.homePage.dataCenterPage.NutrientItem
 import view.page.homePage.dataCenterPage.NutrientRow
@@ -62,7 +63,7 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
             val info = nutritionVM.info
             if (log != null && info != null) {
                 AsyncImage(
-                    log.imageUrl, null, modifier = Modifier.fillMaxWidth().clip(
+                    log.imageUrl.imageWithProxy(), null, modifier = Modifier.fillMaxWidth().clip(
                         MaterialTheme.shapes.large
                     ), contentScale = ContentScale.FillWidth
                 )

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>169167876904-1sst5loaivt3g73tpe1tcdv3lpv2qegq.apps.googleusercontent.com</string>
+	<string>169167876904-pht3ds73aomtkn39su2n2hdm04piv6qu.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.169167876904-1sst5loaivt3g73tpe1tcdv3lpv2qegq</string>
+	<string>com.googleusercontent.apps.169167876904-pht3ds73aomtkn39su2n2hdm04piv6qu</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCqsnIAiElC9qW7nWxORzV4ADn22y26XVQ</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.innerken.compose.boss</string>
+	<string>io.shiji.app</string>
 	<key>PROJECT_ID</key>
 	<string>aaden-saas</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:169167876904:ios:11117b5713ef1c50cc161d</string>
+	<string>1:169167876904:ios:6a23aff22e34950fcc161d</string>
 </dict>
 </plist>
