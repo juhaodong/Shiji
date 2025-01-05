@@ -70,6 +70,26 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                 Text(log.createTimestamp.timeToNow(), style = MaterialTheme.typography.bodySmall)
                 Text(log.foodDescription)
                 SmallSpacer(24)
+                val rating = log.qualityRating
+                val (comment, emoji) = when (rating) {
+                    in 0..25 -> "糟糕至极" to "😞"
+                    in 26..50 -> "略逊一筹" to "😕"
+                    in 51..75 -> "还算不错" to "🙂"
+                    in 76..100 -> "非常健康" to "😄"
+                    else -> "未知" to "❓"
+                }
+
+                Text(
+                    "食物健康评分",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Black
+                )
+                SmallSpacer()
+                Text(
+                    "$comment $emoji($rating)",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+                SmallSpacer(24)
                 Text(
                     "营养成分",
                     style = MaterialTheme.typography.bodySmall,
