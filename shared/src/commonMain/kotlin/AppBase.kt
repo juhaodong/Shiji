@@ -1,28 +1,39 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 import shijiapp.shared.generated.resources.Res
 import shijiapp.shared.generated.resources._ChangeTheme
 import shijiapp.shared.generated.resources._Close
 import shijiapp.shared.generated.resources._DarkMode
 import shijiapp.shared.generated.resources._SystemSetting
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -31,9 +42,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -57,6 +73,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
+import com.raedghazal.kotlinx_datetime_ext.now
+import domain.composable.basic.button.ActionLeftMainButton
+import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.composable.dialog.ComingSoonDialog
 import domain.composable.dialog.ConfirmDialog
@@ -64,6 +83,7 @@ import domain.composable.dialog.DateInputDialog
 import domain.composable.dialog.LoadingDialog
 import domain.composable.dialog.OfflineDialog
 import domain.composable.dialog.SuccessDialog
+import domain.composable.dialog.basic.BeautifulDialog
 import domain.composable.dialog.basic.DialogViewModel
 import domain.composable.dialog.changeLanguageDialog.ChangeLanguageDialog
 import domain.composable.dialog.form.BaseFormDialog
@@ -73,19 +93,30 @@ import domain.inventory.InventoryViewModel
 import domain.purchaseOrder.PurchaseOrderVM
 import domain.supplier.OrderBookViewModel
 import domain.supplier.SupplierViewModel
-import domain.user.AddStoreDialog
+import domain.user.FoodLogDetailDialog
 import domain.user.IdentityVM
 import domain.user.NutritionVM
 import io.github.skeptick.libres.LibresSettings
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import me.tatarka.inject.annotations.Inject
 import modules.GlobalSettingManager
 import modules.network.AppScope
 import modules.network.startRoute
 import modules.physic.changeLocale
+import modules.utils.closingTodayRange
+import modules.utils.dateOnly
+import modules.utils.display
 import modules.utils.displayCurrency
+import modules.utils.generateLast120Months
+import modules.utils.generateYearsSince1970
 import modules.utils.getNgrokUrl
 import modules.utils.globalDialogManager
+import modules.utils.toLocalDate
 import org.jetbrains.compose.resources.stringResource
 import theme.AadenMenuTheme
 import theme.CurrentTheme
@@ -455,6 +486,7 @@ fun AppBase(
                                             NavigationItem.Workbench -> WorkbenchPage(
                                                 identityVM = identityVM,
                                                 dialogViewModel = dialogViewModel,
+                                                nutritionVM = nutritionVM,
                                                 toAdminPage = {
                                                     uriHandler.openUri(
                                                         "https://admin.aaden.io?Base=" + getNgrokUrl(
@@ -656,7 +688,191 @@ fun AppBase(
                         }
                     }
                     InputDialog(dialogViewModel.inputDialogRepository)
+                    BeautifulDialog(
+                        show = nutritionVM.showDateDialog,
+                        onDismissRequest = { nutritionVM.showDateDialog = false },
+                        useCloseButton = false,
+                        noPadding = true
+                    ) {
+                        val timeOption = listOf("日", "月", "年", "其他")
+                        var selectTab by remember { mutableStateOf(timeOption[0]) }
+                        var dateRange by remember { mutableStateOf(closingTodayRange()) }
+                        LaunchedEffect(true) {
+                            dateRange = closingTodayRange()
+                        }
+                        PrimaryTabRow(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                            selectedTabIndex = timeOption.indexOf(selectTab)
+                        ) {
+                            timeOption.forEach { s ->
+                                Tab(
+                                    s == selectTab,
+                                    onClick = { selectTab = s },
+                                    text = { Text(s, style = MaterialTheme.typography.bodyMedium) })
+                            }
+                        }
+                        when (selectTab) {
+                            "日" -> {
+                                val datePickerState =
+                                    rememberDatePickerState(
+                                        initialSelectedDateMillis = Clock.System.now()
+                                            .toEpochMilliseconds(),
+                                        selectableDates = object : SelectableDates {
+                                            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                                                return Instant.fromEpochMilliseconds(utcTimeMillis)
+                                                    .toLocalDateTime(
+                                                        TimeZone.currentSystemDefault()
+                                                    ) <= LocalDateTime.now()
+                                            }
+                                        })
+                                Surface(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = MaterialTheme.colorScheme.surfaceContainerHigh
+                                ) { SmallSpacer(16) }
 
+                                DatePicker(
+                                    state = datePickerState, showModeToggle = false, title = null
+                                )
+                                LaunchedEffect(datePickerState.selectedDateMillis) {
+                                    val date = datePickerState.selectedDateMillis.toLocalDate()
+                                    if (date != null) {
+                                        dateRange = date to date
+                                    }
+                                }
+                            }
+
+                            "月" -> {
+                                val monthList = generateLast120Months()
+                                var selectedDateRange by remember { mutableStateOf(monthList[0]) }
+                                LaunchedEffect(true) {
+                                    selectedDateRange = monthList[0]
+                                }
+                                LazyColumn(
+                                    modifier = Modifier.height(400.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(
+                                        vertical = 8.dp,
+                                        horizontal = 16.dp
+                                    )
+                                ) {
+                                    items(monthList) {
+                                        Surface(
+                                            shape = MaterialTheme.shapes.medium,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            onClick = {
+                                                selectedDateRange = it
+                                            },
+                                            color = if (selectedDateRange == it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+                                        ) {
+                                            Row(
+                                                modifier = Modifier.padding(16.dp),
+                                                verticalAlignment = Alignment.Bottom
+                                            ) {
+                                                Text(
+                                                    it.display()
+                                                )
+                                                GrowSpacer()
+                                                Text(
+                                                    it.first.dateOnly() + " - " + it.second.dateOnly(),
+                                                    style = MaterialTheme.typography.labelSmall
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                                LaunchedEffect(selectedDateRange) {
+                                    dateRange = selectedDateRange
+                                }
+
+                            }
+
+                            "年" -> {
+                                val yearList = generateYearsSince1970()
+                                var selectedDateRange by remember { mutableStateOf(yearList[0]) }
+                                LaunchedEffect(true) {
+                                    selectedDateRange = yearList[0]
+                                }
+                                LazyColumn(
+                                    modifier = Modifier.height(400.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(
+                                        vertical = 8.dp,
+                                        horizontal = 16.dp
+                                    )
+                                ) {
+                                    items(yearList) {
+                                        Surface(
+                                            shape = MaterialTheme.shapes.medium,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            onClick = {
+                                                selectedDateRange = it
+                                            },
+                                            color = if (selectedDateRange == it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+
+                                        ) {
+                                            Row(
+                                                modifier = Modifier.padding(16.dp),
+                                                verticalAlignment = Alignment.Bottom
+                                            ) {
+                                                Text(
+                                                    it.display()
+                                                )
+                                                GrowSpacer()
+                                                Text(
+                                                    it.first.dateOnly() + " - " + it.second.dateOnly(),
+                                                    style = MaterialTheme.typography.labelSmall
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                                LaunchedEffect(selectedDateRange) {
+                                    dateRange = selectedDateRange
+                                }
+                            }
+
+                            "其他" -> {
+                                val datePickerState = rememberDateRangePickerState(
+                                    initialSelectedStartDateMillis = Clock.System.now()
+                                        .toEpochMilliseconds(),
+                                    initialSelectedEndDateMillis = Clock.System.now()
+                                        .toEpochMilliseconds(),
+                                    selectableDates = object : SelectableDates {
+                                        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                                            return Instant.fromEpochMilliseconds(utcTimeMillis)
+                                                .toLocalDateTime(
+                                                    TimeZone.currentSystemDefault()
+                                                ) <= LocalDateTime.now()
+                                        }
+                                    })
+                                DateRangePicker(
+                                    state = datePickerState,
+                                    showModeToggle = false,
+                                    title = {},
+                                    modifier = Modifier.weight(1f)
+                                )
+                                LaunchedEffect(datePickerState.selectedStartDateMillis to datePickerState.selectedEndDateMillis) {
+
+                                    val dateStart =
+                                        datePickerState.selectedStartDateMillis.toLocalDate()
+                                    val dateEnd =
+                                        datePickerState.selectedEndDateMillis.toLocalDate()
+                                    if (dateStart != null && dateEnd != null) {
+                                        dateRange = dateStart to dateEnd
+                                    }
+
+                                }
+                            }
+                        }
+
+                        Row(modifier = Modifier.padding(16.dp)) {
+                            ActionLeftMainButton(text = "确认", icon = Icons.Default.Done) {
+                                nutritionVM.confirmDateRange(dateRange)
+                            }
+                        }
+
+
+                    }
                     DateInputDialog(dialogViewModel)
                     ConfirmDialog()
                     SimpleSelectionDialog(dialogViewModel = dialogViewModel)
@@ -667,7 +883,7 @@ fun AppBase(
 
                         showLanguageDialog = false
                     }
-                    AddStoreDialog(identityVM)
+                    FoodLogDetailDialog(nutritionVM)
                     StoreManagementDialog(identityVM)
                     dialogViewModel.formSchemaList.forEach {
                         BaseFormDialog(it, dialogViewModel)

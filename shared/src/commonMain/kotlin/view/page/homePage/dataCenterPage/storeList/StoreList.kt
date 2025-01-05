@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,18 +36,22 @@ import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.user.IdentityVM
+import domain.user.NutritionVM
 import domain.user.model.UserStoreDetailsDTO
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.plus
 import modules.utils.FormatUtils.toPriceDisplay
+import modules.utils.closingTodayRange
+import modules.utils.dateOnly
+import modules.utils.display
 
 
 @Composable
-fun StoreList(identityVM: IdentityVM) {
+fun StoreList(identityVM: IdentityVM, nutritionVM: NutritionVM) {
     val store = identityVM.currentProfile
-    if(store != null){
+    if (store != null) {
         val totalMinus = store.currentWeight.toFloat() - store.targetWeight.toFloat()
 
         val restDate = store.weightLossCycle - LocalDate.now()
@@ -78,13 +84,19 @@ fun StoreList(identityVM: IdentityVM) {
             )
             GrowSpacer()
             SmallSpacer()
-            Text(
-                "剩余${(store.weightLossCycle - restDate)}天",
-                style = MaterialTheme.typography.bodySmall
-            )
+            if (nutritionVM.currentDateRange == closingTodayRange())
+                Text(
+                    "剩余${(store.weightLossCycle - restDate)}天",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            else
+                Text(
+                    nutritionVM.currentDateRange.display(),
+                    style = MaterialTheme.typography.bodySmall
+                )
             SmallSpacer()
             IconButton(
-                onClick = { identityVM.toggleProfileDialog() },
+                onClick = { nutritionVM.showDateDialog = true },
                 modifier = Modifier.size(28.dp)
             ) {
                 Icon(

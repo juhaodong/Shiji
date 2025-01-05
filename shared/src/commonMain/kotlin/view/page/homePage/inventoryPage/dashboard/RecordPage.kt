@@ -93,7 +93,7 @@ fun RecordPage(
             }
         })
     Column(modifier = Modifier.fillMaxSize()) {
-        StoreList(identityVM = identityVM)
+        StoreList(identityVM = identityVM, nutritionVM)
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             PageLoadingProvider(
                 nutritionVM.foodLogLoading,
@@ -112,7 +112,11 @@ fun RecordPage(
                     verticalItemSpacing = 4.dp
                 ) {
                     items(nutritionVM.foodLogList) {
-                        BaseSurface(color = MaterialTheme.colorScheme.surfaceContainerLowest) {
+                        BaseSurface(
+                            color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                            onClick = {
+                                nutritionVM.showFoodLog(it)
+                            }) {
                             Column(modifier = Modifier) {
                                 AsyncImage(
                                     it.imageUrl, null, modifier = Modifier.fillMaxWidth().clip(
@@ -178,7 +182,7 @@ fun RecordPage(
         }
         LaunchedEffect(imageByteArray) {
             if (imageByteArray != null) {
-                hintText = "非常好"
+                hintText = "非常好，图片看上去很清楚！"
             } else {
                 hintText = "请上传关于食物的照片，务必拍下全貌，这样子Ai才能更好的分析食物的营养成分"
             }

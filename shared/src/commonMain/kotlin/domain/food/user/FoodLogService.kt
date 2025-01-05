@@ -2,9 +2,11 @@ package domain.food.user
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -19,6 +21,10 @@ interface FoodLogService {
     @Headers("Content-Type: application/json")
     @POST(BASE_URL)
     suspend fun saveFoodLog(@Body request: FoodLogRequest): FoodLog
+
+
+    @DELETE("$BASE_URL/{id}")
+    suspend fun deleteFoodLog(@Path("id") id: Long): Any
 
     @GET("$BASE_URL/search-by-uid")
     suspend fun findFoodLogsByUidAndDateRange(

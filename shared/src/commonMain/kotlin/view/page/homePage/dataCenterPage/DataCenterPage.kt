@@ -25,6 +25,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +40,7 @@ import domain.food.user.AggregatedActualIntake
 import domain.food.user.NutritionRecommendation
 import domain.user.IdentityVM
 import domain.user.NutritionVM
+import kotlinx.coroutines.delay
 import modules.utils.FormatUtils.displayWithUnit
 import modules.utils.FormatUtils.toPriceDisplay
 import view.page.homePage.dataCenterPage.storeDetail.StoreDetails
@@ -53,12 +55,17 @@ fun DataCenterPage(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        StoreList(identityVM)
+        StoreList(identityVM, nutritionVM)
         StoreDetails(
             identityVM = identityVM,
             nutritionVM = nutritionVM,
             toStatisticCenter = toStatisticCenter
         )
+
+        LaunchedEffect(true) {
+            delay(100)
+            nutritionVM.showDataAtDate()
+        }
 
     }
 }

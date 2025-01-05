@@ -55,13 +55,24 @@ class NutritionVM(
         NavigationItem.DataCenter
     )
 
+    var showFoodLogDetailDialog by mutableStateOf(false)
+    var selectedFoodLog: FoodLog? by mutableStateOf(null)
 
-    private fun showDataAtDate(date: LocalDate) {
+    fun showFoodLog(foodLog: FoodLog) {
+        showFoodLogDetailDialog = true
+        selectedFoodLog = foodLog
+    }
+
+    fun showDataAtDate() {
         loading = true
         viewModelScope.launch {
             val deferredData = async {
                 SafeRequestScope.handleRequest {
-                    nutritionService.getNutritionData(identityVM.currentUser!!.uid, date, date)
+                    nutritionService.getNutritionData(
+                        identityVM.currentUser!!.uid,
+                        currentDateRange.first,
+                        currentDateRange.second
+                    )
 
                 }
             }
@@ -106,8 +117,8 @@ class NutritionVM(
         val remote = SafeRequestScope.handleRequest {
             foodLogService.findFoodLogsByUidAndDateRange(
                 identityVM.currentUser!!.uid,
-                LocalDate.now(),
-                LocalDate.now()
+                currentDateRange.first,
+                currentDateRange.second
             )
         } ?: listOf()
         foodLogList.clear()
@@ -116,9 +127,27 @@ class NutritionVM(
     }
 
 
-    fun showDataForIndex(index: Int) {
-        val date = if (index == 0) closingToday() else closingToday().minus(DatePeriod(days = 1))
-        showDataAtDate(date)
+    fun deleteFoodLog(foodLog: FoodLog) {
+
+        globalDialogManager.confirmAnd(
+            "您是否要删除本条记录",
+            "你删除了，吃进去的也不会吐出来的哦，不要逃避！！"
+        ) {
+            foodLogLoading = true
+            viewModelScope.launch {
+                foodLogService.deleteFoodLog(foodLog.id!!.toLong())
+                refreshFoodLog()
+                selectedFoodLog = null
+                showFoodLogDetailDialog = false
+                foodLogLoading = false
+            }
+        }
+    }
+
+    fun confirmDateRange(dateRange: Pair<LocalDate, LocalDate>) {
+        showDateDialog = false
+        currentDateRange = dateRange
+        showDataAtDate()
     }
 
 

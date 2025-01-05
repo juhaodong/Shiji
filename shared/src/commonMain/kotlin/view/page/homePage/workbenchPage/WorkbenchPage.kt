@@ -30,6 +30,7 @@ import domain.composable.basic.layout.SmallSpacer
 import domain.composable.dialog.basic.DialogViewModel
 import domain.composable.dialog.selection.SelectOption
 import domain.user.IdentityVM
+import domain.user.NutritionVM
 import domain.user.model.UserStoreAuth
 import org.jetbrains.compose.resources.painterResource
 import view.page.homePage.dataCenterPage.storeList.StoreList
@@ -39,6 +40,7 @@ import view.page.homePage.dataCenterPage.storeList.StoreList
 fun WorkbenchPage(
     identityVM: IdentityVM,
     dialogViewModel: DialogViewModel,
+    nutritionVM: NutritionVM,
     toAdminPage: () -> Unit,
     toTeamManagePage: () -> Unit,
     onChangeTheme: () -> Unit,
@@ -46,8 +48,6 @@ fun WorkbenchPage(
 ) {
     val user = identityVM.currentUser ?: return
     val scope = rememberCoroutineScope()
-    val uriHandler = LocalUriHandler.current
-    val manager = LocalDialogManager.current
     val singleImagePicker = rememberImagePickerLauncher(selectionMode = SelectionMode.Single,
         scope = scope,
         onResult = { byteArrays ->
@@ -56,7 +56,7 @@ fun WorkbenchPage(
             }
         })
     Column {
-        StoreList(identityVM)
+        StoreList(identityVM,nutritionVM)
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {

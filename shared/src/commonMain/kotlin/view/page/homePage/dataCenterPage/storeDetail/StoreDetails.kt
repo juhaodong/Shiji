@@ -45,7 +45,7 @@ import view.page.homePage.dataCenterPage.NutritionSummary
 @Composable
 fun StoreDetails(identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCenter: () -> Unit) {
     val pullRefreshState = rememberPullToRefreshState()
-    var selectedDate by remember { mutableStateOf(0) }
+
     val scope = rememberCoroutineScope()
     val store = identityVM.currentProfile
     val info = nutritionVM.info
@@ -55,7 +55,7 @@ fun StoreDetails(identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCe
         state = pullRefreshState,
         modifier = Modifier.fillMaxSize(),
         onRefresh = {
-            nutritionVM.showDataForIndex(selectedDate)
+
             scope.launch {
                 pullRefreshState.animateToHidden()
             }
@@ -169,9 +169,7 @@ fun StoreDetails(identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCe
 
     }
 
-    LaunchedEffect(true) {
-        nutritionVM.showDataForIndex(0)
-    }
+
 
 
 }
