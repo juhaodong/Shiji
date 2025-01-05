@@ -4,7 +4,7 @@
   },
   "name": "shiji-app",
   "description": "[![official project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)\r [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "devDependencies": {
     "@release-it/bumper": "^6.0.1"
