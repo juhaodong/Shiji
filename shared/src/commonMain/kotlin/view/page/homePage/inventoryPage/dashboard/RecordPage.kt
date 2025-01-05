@@ -173,10 +173,19 @@ fun RecordPage(
     BeautifulDialog(showDialog, onDismissRequest = {
         showDialog = false
     }) {
-
+        var hintText by remember {
+            mutableStateOf("请上传关于食物的照片，务必拍下全貌，这样子Ai才能更好的分析食物的营养成分")
+        }
+        LaunchedEffect(imageByteArray) {
+            if (imageByteArray != null) {
+                hintText = "非常好"
+            } else {
+                hintText = "请上传关于食物的照片，务必拍下全貌，这样子Ai才能更好的分析食物的营养成分"
+            }
+        }
         BaseCardHeader(
             "纪录新的一餐",
-            "哇！看上去还不错啊",
+            hintText,
             noPadding = true,
             icon = Icons.AutoMirrored.Filled.ListAlt
         )
