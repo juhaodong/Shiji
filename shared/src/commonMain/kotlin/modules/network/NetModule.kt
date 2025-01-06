@@ -10,6 +10,9 @@ import de.jensklingenberg.ktorfit.ktorfit
 import domain.food.service.FoodLogService
 import domain.food.service.NutritionService
 import domain.food.service.UserProfileService
+import domain.food.service.createFoodLogService
+import domain.food.service.createNutritionService
+import domain.food.service.createUserProfileService
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -46,17 +49,17 @@ abstract class NetModule {
     @AppScope
     @Provides
     protected fun userProfileService(ktorfit: Ktorfit): UserProfileService =
-        ktorfit.create()
+        ktorfit.createUserProfileService()
 
     @AppScope
     @Provides
     protected fun foodLogService(ktorfit: Ktorfit): FoodLogService =
-        ktorfit.create()
+        ktorfit.createFoodLogService()
 
     @AppScope
     @Provides
     protected fun nutritionService(ktorfit: Ktorfit): NutritionService =
-        ktorfit.create()
+        ktorfit.createNutritionService()
 
 
     @AppScope
