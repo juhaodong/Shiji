@@ -3,5 +3,9 @@
         <external-path
             name="download"
             path="" />
+        <cache-path
+            name="cache_files"
+            path="." />
     </paths>
+
 </resources>
