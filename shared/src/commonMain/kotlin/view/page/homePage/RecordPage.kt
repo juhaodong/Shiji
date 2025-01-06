@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,6 +61,7 @@ import com.preat.peekaboo.ui.camera.rememberPeekabooCameraState
 import dev.icerock.moko.media.compose.BindMediaPickerEffect
 import dev.icerock.moko.media.compose.rememberMediaPickerControllerFactory
 import dev.icerock.moko.media.picker.MediaSource
+import domain.composable.basic.button.BaseIcon
 import domain.composable.basic.button.BaseIconButton
 import domain.composable.basic.button.BaseOutlinedIconButton
 import domain.composable.basic.button.BaseTonalIconButton
@@ -250,33 +252,53 @@ fun RecordPage(
                     )
                 } else {
 
-                    Box(modifier = Modifier.fillMaxWidth().wrapContentSize()) {
-                        Row(
-                            modifier = Modifier.pa().px(48).fillMaxWidth()
-                                .align(Alignment.BottomCenter),
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            BaseIconButton(icon = Icons.Default.PhotoCamera) {
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Surface(
+                            onClick = {
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                                 scope.launch {
-                                    val result = picker.pickImage(MediaSource.CAMERA)
-                                    imageByteArray = result.toByteArray()
+                                    val result = runCatching {
+                                        picker.pickImage(MediaSource.CAMERA)
+                                    }
+
+                                    imageByteArray = result.getOrNull()?.toByteArray()
                                 }
-
-                            }
-                            BaseIconButton(
-                                icon = Icons.Default.AddPhotoAlternate,
+                            },
+                            modifier = Modifier.weight(1f),
+                            color = MaterialTheme.colorScheme.surfaceContainerHighest
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth().pa(16),
+                                contentAlignment = Alignment.Center
                             ) {
-
+                                BaseIcon(icon = Icons.Default.PhotoCamera, size = 28)
+                            }
+                        }
+                        Surface(
+                            onClick = {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                                 singleImagePicker.launch()
-                                
+                            },
+                            modifier = Modifier.weight(1f),
+                            color = MaterialTheme.colorScheme.surfaceContainer
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth().pa(16),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                BaseIcon(icon = Icons.Default.AddPhotoAlternate, size = 28)
                             }
                         }
                     }
+
                 }
             }
         }
-        SmallSpacer(16)
+        SmallSpacer()
         if (bitmap != null) {
             PlateSizeSelector(minPlateSize) {
                 minPlateSize = it

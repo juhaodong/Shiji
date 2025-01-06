@@ -1,6 +1,7 @@
 package domain.composable.basic.button
 
 import LocalDialogManager
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.FilledTonalIconButton
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BaseIconButton(
@@ -25,6 +27,16 @@ fun BaseIconButton(
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(icon, null, tint = color ?: LocalContentColor.current)
     }
+}
+
+@Composable
+fun BaseIcon(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    color: Color? = null,
+    size: Int = 24
+) {
+    Icon(icon, null, tint = color ?: LocalContentColor.current, modifier = modifier.size(size.dp))
 }
 
 @Composable
