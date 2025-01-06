@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalPermissionsApi::class)
+
 package view.page.homePage
 
 import androidx.compose.foundation.Image
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,6 +50,10 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mohamedrejeb.calf.permissions.ExperimentalPermissionsApi
+import com.mohamedrejeb.calf.permissions.Permission
+import com.mohamedrejeb.calf.permissions.isGranted
+import com.mohamedrejeb.calf.permissions.rememberPermissionState
 import com.preat.peekaboo.image.picker.SelectionMode
 import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
@@ -80,6 +87,9 @@ fun RecordPage(
     var showDialog by remember { mutableStateOf(false) }
     var imageByteArray: ByteArray? by remember { mutableStateOf(null) }
     var personCount by remember { mutableStateOf(1) }
+    val cameraPermissionState = rememberPermissionState(
+        Permission.Camera
+    )
     val hapticFeedback = LocalHapticFeedback.current
 
     LaunchedEffect(true) {
@@ -170,7 +180,12 @@ fun RecordPage(
                 color = MaterialTheme.colorScheme.primary,
                 icon = Icons.Default.PhotoCamera
             ) {
-                showDialog = true
+                if (cameraPermissionState.status.isGranted) {
+                    showDialog = true
+                } else {
+                    cameraPermissionState.launchPermissionRequest()
+                }
+
             }
             SmallSpacer()
         }
@@ -189,6 +204,9 @@ fun RecordPage(
             } else {
                 hintText = "请上传关于食物的照片，务必拍下全貌，这样子Ai才能更好的分析食物的营养成分"
             }
+        }
+        LaunchedEffect(showDialog) {
+            imageByteArray = null
         }
         BaseCardHeader(
             "纪录新的一餐",
@@ -218,10 +236,12 @@ fun RecordPage(
                     val state = rememberPeekabooCameraState(onCapture = {
                         imageByteArray = it
                     })
-                    Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
+
+                    Box(modifier = Modifier.fillMaxWidth().wrapContentSize()) {
                         PeekabooCamera(
                             state = state,
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxWidth().aspectRatio(3 / 4f)
+                                .requiredHeightIn(max = 500.dp),
                             permissionDeniedContent = {
                                 Text(
                                     "您拒绝了相机使用的权限，" +

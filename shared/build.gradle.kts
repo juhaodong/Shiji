@@ -100,7 +100,7 @@ kotlin {
                 implementation(libs.peekaboo.ui)
                 implementation(libs.peekaboo.image.picker)
                 implementation(libs.coil.compose)
-
+                implementation(libs.calf.permissions)
 
                 implementation(libs.sain)
 
