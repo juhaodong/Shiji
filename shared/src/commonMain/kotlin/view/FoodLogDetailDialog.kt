@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Share
@@ -68,7 +69,7 @@ import kotlin.uuid.Uuid
 @Composable
 fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
 
-    BeautifulDialog(nutritionVM.showFoodLogDetailDialog, onDismissRequest = {
+    BeautifulDialog(nutritionVM.showFoodLogDetailDialog, noPadding = true, onDismissRequest = {
         nutritionVM.showFoodLogDetailDialog = false
     }) {
         val graphicsLayer = rememberGraphicsLayer()
@@ -95,7 +96,7 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                         }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background)
-                            .padding(if (sharing) 16.dp else 0.dp)
+                            .padding(16.dp)
                     ) {
 
                         AsyncImage(
@@ -162,11 +163,11 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                             )
                         }
 
-                        SmallSpacer(24)
+                        SmallSpacer()
                     }
 
                 }
-                Row {
+                Row(modifier = Modifier.padding(16.dp)) {
                     MainActionGrowButton(
                         text = "删除",
                         loading = nutritionVM.foodLogLoading,
@@ -180,7 +181,7 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                         text = "分享",
                         loading = sharing,
                         color = MaterialTheme.colorScheme.primary,
-                        icon = Icons.Default.Share
+                        icon = Icons.Default.IosShare
                     ) {
                         scope.launch {
                             sharing = true
