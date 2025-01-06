@@ -27,7 +27,7 @@ android {
         create("innerKen") {
             enableV1Signing = true
             enableV2Signing = true
-            storeFile = file("innerken.jks")
+            storeFile = file("shiji.jks")
             storePassword = "asd123456"
             keyAlias = "key0"
             keyPassword = "asd123456"
