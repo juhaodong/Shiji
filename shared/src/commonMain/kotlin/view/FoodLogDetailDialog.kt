@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Science
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material.icons.outlined.Egg
@@ -168,6 +170,7 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                     MainActionGrowButton(
                         text = "删除",
                         loading = nutritionVM.foodLogLoading,
+                        icon = Icons.Default.Delete,
                         color = MaterialTheme.colorScheme.errorContainer
                     ) {
                         nutritionVM.deleteFoodLog(log)
@@ -176,7 +179,8 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                     MainActionGrowButton(
                         text = "分享",
                         loading = sharing,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        icon = Icons.Default.Share
                     ) {
                         scope.launch {
                             sharing = true
