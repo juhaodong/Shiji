@@ -1,10 +1,5 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-import shijiapp.shared.generated.resources.Res
-import shijiapp.shared.generated.resources._ChangeTheme
-import shijiapp.shared.generated.resources._Close
-import shijiapp.shared.generated.resources._DarkMode
-import shijiapp.shared.generated.resources._SystemSetting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -89,13 +84,10 @@ import domain.composable.dialog.changeLanguageDialog.ChangeLanguageDialog
 import domain.composable.dialog.form.BaseFormDialog
 import domain.composable.dialog.inputDialog.InputDialog
 import domain.composable.dialog.selection.SimpleSelectionDialog
-import domain.inventory.InventoryViewModel
-import domain.purchaseOrder.PurchaseOrderVM
-import domain.supplier.OrderBookViewModel
-import domain.supplier.SupplierViewModel
-import domain.user.FoodLogDetailDialog
-import domain.user.IdentityVM
+import view.FoodLogDetailDialog
+
 import domain.user.NutritionVM
+import domain.user.IdentityVM
 import io.github.skeptick.libres.LibresSettings
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -118,57 +110,28 @@ import modules.utils.getNgrokUrl
 import modules.utils.globalDialogManager
 import modules.utils.toLocalDate
 import org.jetbrains.compose.resources.stringResource
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources._ChangeTheme
+import shijiapp.shared.generated.resources._Close
+import shijiapp.shared.generated.resources._DarkMode
+import shijiapp.shared.generated.resources._SystemSetting
 import theme.AadenMenuTheme
 import theme.CurrentTheme
 import theme.colorsSets
 import view.StoreManagementDialog
-
 import view.page.activatePage.ActivatePage
 import view.page.homePage.NavigationItem
+import view.page.homePage.RecordPage
 import view.page.homePage.dataCenterPage.DataCenterPage
-import view.page.homePage.inventoryPage.dashboard.RecordPage
-import view.page.homePage.inventoryPage.resource.StorageItemListPage
-import view.page.homePage.supplierManagePage.orderBook.OrderBookDetailPage
-import view.page.homePage.supplierManagePage.orderBook.OrderMenuPage
-import view.page.homePage.supplierManagePage.orderBook.ProductDetailPage
-import view.page.homePage.supplierManagePage.orderBook.ProductImportPage
-import view.page.homePage.supplierManagePage.orderBook.ProductListPage
-import view.page.homePage.supplierManagePage.orders.OrderConfirmPage
-import view.page.homePage.supplierManagePage.orders.OrderDetailsPage
-import view.page.homePage.supplierManagePage.orders.OrderListPage
-import view.page.homePage.supplierManagePage.orders.OrderSignPage
-import view.page.homePage.supplierManagePage.orders.OrderSuccessPage
-import view.page.homePage.supplierManagePage.supplierlistpage.findSupplierPage.FindSupplierPage
 import view.page.homePage.workbenchPage.WorkbenchPage
 import view.page.loginPage.LoginPage
-import view.page.statisticPage.StatisticCenterPage
-import view.page.statisticPage.StatisticVM
 
 object RouteName {
     const val LOGIN = "login"
     const val ACTIVATE = "activate"
     const val HOME = "home"
     const val LOADING = "loading"
-    const val STATISTIC_CENTER = "statisticCenter"
     const val INVENTORY_LIST = "inventoryList"
-
-    object Supplier {
-        const val FIND_SUPPLIER = "findSupplier"
-
-        const val ORDER_BOOK_DETAIL = "OrderBookDetail"
-        const val ORDER_MENU = "OrderProduct"
-
-        const val PRODUCT_IMPORT = "ProductImport"
-        const val PRODUCT_LIST = "ProductList"
-
-        const val PRODUCT_DETAIL = "ProductEdit"
-
-        const val ORDER_CONFIRM = "OrderConfirm"
-        const val ORDER_SUCCESS = "OrderSuccess"
-        const val ORDER_LIST = "OrderList"
-        const val ORDER_DETAILS = "OrderDetails"
-        const val ORDER_SIGN = "OrderSign"
-    }
 
     const val TeamManage = "TeamManage"
 }
@@ -184,11 +147,6 @@ fun AppBase(
     identityVM: IdentityVM,
     dialogViewModel: DialogViewModel,
     globalSettingManager: GlobalSettingManager,
-    statisticVM: StatisticVM,
-    orderBookViewModel: OrderBookViewModel,
-    inventoryViewModel: InventoryViewModel,
-    supplierViewModel: SupplierViewModel,
-    purchaseOrderVM: PurchaseOrderVM,
     nutritionVM: NutritionVM,
     navHostController: NavHostController = rememberNavController(),
 ) {
@@ -474,7 +432,7 @@ fun AppBase(
                                                 identityVM = identityVM,
                                                 nutritionVM = nutritionVM,
                                                 toStatisticCenter = {
-                                                    goto(RouteName.STATISTIC_CENTER)
+
                                                 })
 
                                             NavigationItem.DailyRecord -> RecordPage(
@@ -510,148 +468,7 @@ fun AppBase(
                                     }
                                 }
                             }
-                            composable(RouteName.Supplier.FIND_SUPPLIER) {
-                                FindSupplierPage(
-                                    supplierViewModel,
-                                    chooseSupplier = {
-                                        dialogManager.confirmAnd(
-                                            "您是否确定要绑定此供应商",
-                                            "您选中的供应商" + it.name + "是公开供应商，可以直接绑定"
-                                        ) {
-                                            scope.launch {
-                                                supplierViewModel.bindSupplier(it.id)
-                                                navHostController.popBackStack()
-                                            }
-                                        }
-                                    }
-                                ) {
-                                    navHostController.popBackStack()
-                                }
-                            }
-                            composable(
-                                RouteName.Supplier.ORDER_BOOK_DETAIL,
-                            ) {
-                                //显示供应商详情，过去对于这个供应商的订单，一个开始订购按钮，点击开始订购按钮，跳转到订购页面
-                                OrderBookDetailPage(
-                                    orderBookViewModel = orderBookViewModel,
-                                    purchaseOrderVM = purchaseOrderVM,
-                                    back = { navHostController.popBackStack() },
-                                    toOrderProductPage = {
-                                        goto(RouteName.Supplier.ORDER_MENU)
-                                    },
-                                    toOrderListPage = {
-                                        goto(RouteName.Supplier.ORDER_LIST)
-                                    },
-                                    toOrderSignPage = {
-                                        purchaseOrderVM.selectedOrderId = it
-                                        goto(RouteName.Supplier.ORDER_SIGN)
-                                    },
-                                    toOrderDetailPage = {
-                                        purchaseOrderVM.selectedOrderId = it
-                                        goto(RouteName.Supplier.ORDER_DETAILS)
-                                    })
-                            }
-                            composable(RouteName.Supplier.ORDER_MENU) {
-                                //订购页面
-                                OrderMenuPage(
-                                    orderBookViewModel = orderBookViewModel,
-                                    dialogViewModel = dialogViewModel,
-                                    back = {
-                                        navHostController.popBackStack()
-                                    },
-                                    toProductDetail = {
-                                        orderBookViewModel.loadProductDetail(it)
-                                        goto(RouteName.Supplier.PRODUCT_DETAIL)
-                                    },
-                                    toProductImport = {
-                                        goto(RouteName.Supplier.PRODUCT_IMPORT)
-                                    },
-                                    toOrderConfirm = {
-                                        goto(RouteName.Supplier.ORDER_CONFIRM)
-                                    })
-                            }
 
-
-
-                            composable(RouteName.Supplier.PRODUCT_IMPORT) {
-                                ProductImportPage(orderBookViewModel, back = {
-                                    navHostController.popBackStack()
-                                }, chooseCategory = {
-                                    orderBookViewModel.chooseCategory(it)
-                                    goto(RouteName.Supplier.PRODUCT_LIST)
-                                }, save = {
-                                    orderBookViewModel.saveImportResult()
-                                    goto(
-                                        RouteName.Supplier.ORDER_MENU,
-                                        popTo = RouteName.Supplier.ORDER_MENU
-                                    )
-                                })
-                            }
-                            composable(RouteName.Supplier.PRODUCT_LIST) {
-                                ProductListPage(orderBookViewModel, back = {
-                                    navHostController.popBackStack()
-                                }, toProductDetail = {
-                                    orderBookViewModel.loadProductDetail(it)
-                                    goto(RouteName.Supplier.PRODUCT_DETAIL)
-                                }, save = {
-                                    orderBookViewModel.saveImportResult()
-                                    goto(
-                                        RouteName.Supplier.ORDER_MENU,
-                                        popTo = RouteName.Supplier.ORDER_MENU
-                                    )
-                                })
-                            }
-                            composable(RouteName.Supplier.PRODUCT_DETAIL) {
-                                ProductDetailPage(orderBookViewModel) {
-                                    navHostController.popBackStack()
-                                }
-                            }
-
-                            composable(RouteName.Supplier.ORDER_CONFIRM) {
-                                //确认下单页面，选择下单时间等
-                                OrderConfirmPage(
-                                    orderBookViewModel,
-                                    toOrderSuccess = {
-                                        goto(
-                                            RouteName.Supplier.ORDER_SUCCESS,
-                                            popTo = RouteName.Supplier.ORDER_BOOK_DETAIL
-                                        )
-                                    },
-                                    back = {
-                                        navHostController.popBackStack()
-                                    },
-                                )
-                            }
-
-
-                            composable(RouteName.Supplier.ORDER_SUCCESS) {
-                                OrderSuccessPage() {
-                                    navHostController.popBackStack()
-                                }
-                            }
-                            composable(RouteName.Supplier.ORDER_LIST) {
-                                OrderListPage(purchaseOrderVM = purchaseOrderVM, toOrderDetail = {
-                                    purchaseOrderVM.selectedOrderId = it
-                                    goto(RouteName.Supplier.ORDER_DETAILS)
-                                }) {
-                                    navHostController.popBackStack()
-                                }
-                            }
-                            composable(RouteName.Supplier.ORDER_SIGN) {
-                                OrderSignPage(
-                                    purchaseOrderVM = purchaseOrderVM,
-                                    dialogViewModel = dialogViewModel
-                                ) {
-                                    navHostController.popBackStack()
-                                }
-                            }
-                            composable(RouteName.Supplier.ORDER_DETAILS) {
-                                OrderDetailsPage(purchaseOrderVM, toOrderSignPage = {
-                                    goto(RouteName.Supplier.ORDER_SIGN)
-                                }) {
-                                    navHostController.popBackStack()
-                                }
-                            }
                             composable(RouteName.LOADING) {
                                 Box(
                                     modifier = Modifier.fillMaxSize()
@@ -669,21 +486,9 @@ fun AppBase(
                                     goto(RouteName.HOME, clearAllStack = true)
                                 }
                             }
-                            composable(RouteName.INVENTORY_LIST) {
-                                StorageItemListPage(
-                                    dialogViewModel = dialogViewModel,
-                                    inventoryViewModel = inventoryViewModel
-                                ) {
-                                    navHostController.popBackStack()
-                                }
-                            }
 
 
-                            composable(RouteName.STATISTIC_CENTER) {
-                                StatisticCenterPage(statisticVM, identityVM = identityVM) {
-                                    navHostController.popBackStack()
-                                }
-                            }
+
 
                         }
                     }

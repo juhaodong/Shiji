@@ -8,31 +8,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raedghazal.kotlinx_datetime_ext.now
 import domain.composable.dialog.basic.DialogViewModel
-import domain.dashboard.DashboardReportRepository
-import domain.dashboard.DashboardReportService
-import domain.dashboard.TableInfo
-import domain.food.user.FoodLog
-import domain.food.user.FoodLogRequest
-import domain.food.user.FoodLogService
-import domain.food.user.NutritionService
-import domain.food.user.RecommendationAndActualResponse
-import domain.inventory.InventoryRepository
+import domain.food.service.FoodLog
+import domain.food.service.FoodLogRequest
+import domain.food.service.FoodLogService
+import domain.food.service.NutritionService
+import domain.food.service.RecommendationAndActualResponse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
 import me.tatarka.inject.annotations.Inject
 import modules.GlobalSettingManager
-import modules.auth.currentUser
 import modules.network.AppScope
-import modules.network.IKNetworkRequest
 import modules.network.SafeRequestScope
-import modules.utils.closingToday
-import modules.utils.getEndpointUrl
 import modules.utils.globalDialogManager
 import view.page.homePage.NavigationItem
-import view.page.homePage.dataCenterPage.storeDetail.dashboard.DashboardCard
 
 @AppScope
 @Inject
@@ -40,7 +29,7 @@ class NutritionVM(
     val identityVM: IdentityVM,
     val globalSettingManager: GlobalSettingManager,
     val nutritionService: NutritionService,
-    val inventoryRepository: InventoryRepository,
+
     val foodLogService: FoodLogService,
     val dialogViewModel: DialogViewModel
 ) : ViewModel() {
@@ -88,7 +77,7 @@ class NutritionVM(
     var foodLogLoading by mutableStateOf(false)
     suspend fun createFoodLog(personCount: Int, imageByteArray: ByteArray) {
         foodLogLoading = true
-        val imageUrl = inventoryRepository.uploadFile(imageByteArray)
+        val imageUrl = identityVM.uploadFile(imageByteArray)
         if (imageUrl != null) {
             try {
                 foodLogService.saveFoodLog(

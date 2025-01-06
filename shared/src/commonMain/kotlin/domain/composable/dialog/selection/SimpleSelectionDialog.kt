@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -17,7 +16,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -25,16 +23,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import domain.composable.basic.button.BaseIconButton
+import domain.composable.basic.TwoItemsPerRowGrid
 import domain.composable.basic.cards.BaseCardHeader
 import domain.composable.basic.layout.BaseSurface
 import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.pa
-import domain.composable.basic.layout.px
-import domain.composable.basic.layout.py
 import domain.composable.dialog.basic.BeautifulDialog
 import domain.composable.dialog.basic.DialogViewModel
-import view.page.homePage.dataCenterPage.storeDetail.dashboard.TwoItemsPerRowGrid
+
 
 @Composable
 fun SimpleSelectionDialog(

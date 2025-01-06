@@ -1,6 +1,5 @@
 package view.page.homePage.workbenchPage
 
-import LocalDialogManager
 import shijiapp.shared.generated.resources.Res
 import shijiapp.shared.generated.resources.no_image
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.preat.peekaboo.image.picker.SelectionMode
@@ -31,9 +29,8 @@ import domain.composable.dialog.basic.DialogViewModel
 import domain.composable.dialog.selection.SelectOption
 import domain.user.IdentityVM
 import domain.user.NutritionVM
-import domain.user.model.UserStoreAuth
 import org.jetbrains.compose.resources.painterResource
-import view.page.homePage.dataCenterPage.storeList.StoreList
+import view.page.homePage.AppToolbarFragment
 
 
 @Composable
@@ -56,7 +53,7 @@ fun WorkbenchPage(
             }
         })
     Column {
-        StoreList(identityVM,nutritionVM)
+        AppToolbarFragment(identityVM,nutritionVM)
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {

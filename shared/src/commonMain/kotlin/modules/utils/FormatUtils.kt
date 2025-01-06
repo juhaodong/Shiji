@@ -342,3 +342,15 @@ fun BigDecimal.easyDivide(other: BigDecimal): BigDecimal {
 }
 
 expect fun ImageBitmap.toByteArray(): ByteArray
+
+
+infix fun BigDecimal.eq(other: BigDecimal): Boolean {
+    return this.compareTo(other) == 0
+}
+
+infix fun BigDecimal.notEq(other: BigDecimal): Boolean {
+    return this.compareTo(other) != 0
+}
+const val proxyUrl = "https://cloud-v2.aaden.io/downloadFile?fileUrl="
+fun getRealUrl(originUrl: String) = proxyUrl + originUrl
+fun String.imageWithProxy() = proxyUrl + this
