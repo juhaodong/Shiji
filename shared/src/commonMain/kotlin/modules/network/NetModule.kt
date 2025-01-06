@@ -32,8 +32,8 @@ import kotlin.uuid.Uuid
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER)
 annotation class AppScope
 
-const val cloudUrl = "https://cloud-v2.aaden.io"
-//const val cloudUrl = "http://192.168.178.41"
+//const val cloudUrl = "https://cloud-v2.aaden.io"
+const val cloudUrl = "http://192.168.178.41"
 
 var startRoute = RouteName.HOME
 
@@ -57,7 +57,6 @@ abstract class NetModule {
     @Provides
     protected fun nutritionService(ktorfit: Ktorfit): NutritionService =
         ktorfit.create()
-
 
 
     @AppScope
@@ -84,7 +83,7 @@ abstract class NetModule {
                         Napier.e(message)
                     }
                 }
-                level = LogLevel.ALL
+                level = LogLevel.INFO
             }
             install(ContentNegotiation) {
                 json(json, ContentType.Any)

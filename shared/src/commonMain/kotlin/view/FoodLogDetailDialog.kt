@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -55,13 +54,18 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
             val info = nutritionVM.info
             if (log != null && info != null) {
                 AsyncImage(
-                    log.imageUrl.imageWithProxy(), null, modifier = Modifier.fillMaxWidth().clip(
+                    model = log.imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth().clip(
                         MaterialTheme.shapes.large
-                    ), contentScale = ContentScale.FillWidth
+                    ),
+                    contentScale = ContentScale.FillWidth
                 )
                 SmallSpacer(16)
                 Text(log.createTimestamp.timeToNow(), style = MaterialTheme.typography.bodySmall)
-                Text(log.foodDescription)
+                Text(log.socialDescription)
+                SmallSpacer()
+
                 SmallSpacer(24)
                 val rating = log.qualityRating
                 val (comment, emoji) = when (rating) {
@@ -81,6 +85,17 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                 Text(
                     "$comment $emoji($rating)",
                     style = MaterialTheme.typography.headlineLarge
+                )
+                SmallSpacer(24)
+                Text(
+                    "食物内容",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Black
+                )
+                SmallSpacer()
+                Text(
+                    log.foodContent,
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 SmallSpacer(24)
                 Text(

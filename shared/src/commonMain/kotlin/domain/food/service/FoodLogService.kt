@@ -63,7 +63,8 @@ data class FoodLog(
     val aiTips: String,
     val location: String,
     val note: String,
-    val foodDescription: String,
+    val socialDescription: String,
+    val foodContent: String,
     val id: String? = null,
     val createTimestamp: LocalDateTime
 )
@@ -71,6 +72,7 @@ data class FoodLog(
 @Serializable
 data class FoodLogRequest(
     val imageUrl: String,
+    val minPlateRadius: Int,
     val personCount: String = "",
     val location: String = "",
     val note: String = "",

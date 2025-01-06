@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
@@ -27,7 +26,6 @@ import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -71,8 +69,11 @@ import domain.composable.basic.layout.SmallSpacer
 import domain.composable.basic.layout.pa
 import domain.composable.basic.wrapper.PageLoadingProvider
 import domain.composable.dialog.basic.BeautifulDialog
+import domain.food.service.PlateSize
+import domain.food.service.PlateSizeSelector
 import domain.user.IdentityVM
 import domain.user.NutritionVM
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import modules.utils.FormatUtils.displayWithUnit
 import modules.utils.imageWithProxy
@@ -87,6 +88,7 @@ fun RecordPage(
     var showDialog by remember { mutableStateOf(false) }
     var imageByteArray: ByteArray? by remember { mutableStateOf(null) }
     var personCount by remember { mutableStateOf(1) }
+    var minPlateSize by remember { mutableStateOf(PlateSize.MEDIUM) }
     val cameraPermissionState = rememberPermissionState(
         Permission.Camera
     )
@@ -129,8 +131,12 @@ fun RecordPage(
                             }) {
                             Column(modifier = Modifier) {
                                 AsyncImage(
-                                    it.imageUrl.imageWithProxy(),
-                                    null,
+                                    model = it.imageUrl,
+                                    contentDescription = null,
+                                    onError = {
+                                        Napier.e { "ERR-->" + it.result.throwable.message.toString() }
+
+                                    },
                                     modifier = Modifier.fillMaxWidth().clip(
                                         MaterialTheme.shapes.large
                                     ),
@@ -138,7 +144,7 @@ fun RecordPage(
                                 )
                                 Column(modifier = Modifier.pa(8)) {
                                     Text(
-                                        it.foodDescription,
+                                        it.socialDescription,
                                         style = MaterialTheme.typography.bodySmall,
                                         maxLines = 2,
                                         overflow = TextOverflow.Ellipsis
@@ -215,13 +221,14 @@ fun RecordPage(
             icon = Icons.AutoMirrored.Filled.ListAlt
         )
         SmallSpacer(16)
+        val bitmap = imageByteArray?.toImageBitmap()
         BaseSurface() {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val bitmap = imageByteArray?.toImageBitmap()
+
                 if (bitmap != null) {
                     Image(
                         bitmap,
@@ -266,9 +273,13 @@ fun RecordPage(
                             }
                         }
                     }
-
-
                 }
+            }
+        }
+        SmallSpacer(16)
+        if (bitmap != null) {
+            PlateSizeSelector(minPlateSize) {
+                minPlateSize = it
             }
         }
         SmallSpacer(16)
@@ -302,7 +313,11 @@ fun RecordPage(
             "我记好了", icon = Icons.Default.Check, loading = nutritionVM.foodLogLoading
         ) {
             scope.launch {
-                nutritionVM.createFoodLog(personCount, imageByteArray!!)
+                nutritionVM.createFoodLog(
+                    personCount,
+                    imageByteArray!!,
+                    minPlateSize.approximateDiameterCm
+                )
                 showDialog = false
             }
 

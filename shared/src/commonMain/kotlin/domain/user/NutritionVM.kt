@@ -75,7 +75,7 @@ class NutritionVM(
     }
 
     var foodLogLoading by mutableStateOf(false)
-    suspend fun createFoodLog(personCount: Int, imageByteArray: ByteArray) {
+    suspend fun createFoodLog(personCount: Int, imageByteArray: ByteArray, minPlateRadius: Int) {
         foodLogLoading = true
         val imageUrl = identityVM.uploadFile(imageByteArray)
         if (imageUrl != null) {
@@ -84,7 +84,8 @@ class NutritionVM(
                     FoodLogRequest(
                         imageUrl = imageUrl,
                         uid = identityVM.currentUser!!.uid,
-                        personCount = personCount.toString()
+                        personCount = personCount.toString(),
+                        minPlateRadius = minPlateRadius
                     )
                 )
                 refreshFoodLog()
