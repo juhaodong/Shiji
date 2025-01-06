@@ -13,6 +13,7 @@ pluginManagement {
         }
         google()
         mavenLocal()
+        maven { url = uri("https://jitpack.io") }
     }
     plugins {
         val kotlinVersion = extra["kotlin.version"] as String
@@ -39,6 +40,7 @@ dependencyResolutionManagement {
             url = uri("https://repo.repsy.io/mvn/chrynan/public")
         }
         mavenLocal()
+        maven { url = uri("https://jitpack.io") }
 
     }
 }

@@ -57,6 +57,9 @@ import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
 import com.preat.peekaboo.ui.camera.PeekabooCamera
 import com.preat.peekaboo.ui.camera.rememberPeekabooCameraState
+import dev.icerock.moko.media.compose.BindMediaPickerEffect
+import dev.icerock.moko.media.compose.rememberMediaPickerControllerFactory
+import dev.icerock.moko.media.picker.MediaSource
 import domain.composable.basic.button.BaseIconButton
 import domain.composable.basic.button.BaseOutlinedIconButton
 import domain.composable.basic.button.BaseTonalIconButton
@@ -67,6 +70,7 @@ import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.composable.basic.layout.pa
+import domain.composable.basic.layout.px
 import domain.composable.basic.wrapper.PageLoadingProvider
 import domain.composable.dialog.basic.BeautifulDialog
 import domain.food.service.PlateSize
@@ -94,9 +98,8 @@ fun RecordPage(
     )
     val hapticFeedback = LocalHapticFeedback.current
 
-    LaunchedEffect(true) {
-        nutritionVM.refreshFoodLog()
-    }
+    val factory = rememberMediaPickerControllerFactory()
+    val picker = remember(factory) { factory.createMediaPickerController() }
 
     val singleImagePicker = rememberImagePickerLauncher(
         selectionMode = SelectionMode.Single, scope = scope, onResult = { byteArrays ->
@@ -104,6 +107,12 @@ fun RecordPage(
                 imageByteArray = it
             }
         })
+    BindMediaPickerEffect(picker)
+
+    LaunchedEffect(true) {
+        nutritionVM.refreshFoodLog()
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         AppToolbarFragment(identityVM = identityVM, nutritionVM)
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -240,36 +249,27 @@ fun RecordPage(
                         contentScale = ContentScale.Fit
                     )
                 } else {
-                    val state = rememberPeekabooCameraState(onCapture = {
-                        imageByteArray = it
-                    })
 
                     Box(modifier = Modifier.fillMaxWidth().wrapContentSize()) {
-                        PeekabooCamera(
-                            state = state,
-                            modifier = Modifier.fillMaxWidth().aspectRatio(3 / 4f)
-                                .requiredHeightIn(max = 500.dp),
-                            permissionDeniedContent = {
-                                Text(
-                                    "您拒绝了相机使用的权限，" +
-                                            "因此，您只能从下方选取相册内的图片，" +
-                                            "或者，您可以重新在设置里授予相关权限"
-                                )
-                            },
-                        )
                         Row(
-                            modifier = Modifier.pa().fillMaxWidth().align(Alignment.BottomCenter),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            modifier = Modifier.pa().px(48).fillMaxWidth()
+                                .align(Alignment.BottomCenter),
+                            horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            BaseIconButton(icon = Icons.Default.PhotoCamera, color = Color.White) {
+                            BaseIconButton(icon = Icons.Default.PhotoCamera) {
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                state.capture()
+                                scope.launch {
+                                    val result = picker.pickImage(MediaSource.CAMERA)
+                                    imageByteArray = result.toByteArray()
+                                }
+
                             }
                             BaseIconButton(
                                 icon = Icons.Default.AddPhotoAlternate,
-                                color = Color.White
                             ) {
+
                                 singleImagePicker.launch()
+                                
                             }
                         }
                     }

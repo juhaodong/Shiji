@@ -95,6 +95,8 @@ kotlin {
 
                 implementation(libs.human.readable)
                 implementation(kotlin("reflect"))
+                api("dev.icerock.moko:media:0.11.0")
+                api("dev.icerock.moko:media-compose:0.11.0")
 
 
                 implementation(libs.peekaboo.ui)
