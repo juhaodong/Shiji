@@ -23,6 +23,10 @@ DailyFoodLog is a cross-platform application built with Kotlin Multiplatform Com
 
 ---
 
+## How to Use
+1. just import this project to android studio
+2. run it
+
 ## Tech Stack 💻
 
 ### Frontend
