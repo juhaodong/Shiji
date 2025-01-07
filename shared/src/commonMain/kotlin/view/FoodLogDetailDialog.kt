@@ -183,8 +183,8 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                         color = MaterialTheme.colorScheme.primary,
                         icon = Icons.Default.IosShare
                     ) {
+                        sharing = true
                         scope.launch {
-                            sharing = true
                             val imageBitmap = graphicsLayer.toImageBitmap()
                             val result = shareManager.shareFile(
                                 ShareFileModel(

@@ -331,9 +331,11 @@ fun RecordPage(
         }
 
         SmallSpacer(24)
+
         MainButton(
             "我记好了", icon = Icons.Default.Check, loading = nutritionVM.foodLogLoading
         ) {
+            nutritionVM.foodLogLoading = true
             scope.launch {
                 nutritionVM.createFoodLog(
                     personCount,

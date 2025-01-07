@@ -132,7 +132,6 @@ fun RowScope.MainActionGrowButton(
                     Icon(imageVector = icon, contentDescription = null)
                     SmallSpacer()
                 }
-
                 Text(
                     text,
                     style = MaterialTheme.typography.titleMedium,
