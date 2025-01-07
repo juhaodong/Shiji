@@ -118,7 +118,7 @@ import shijiapp.shared.generated.resources._SystemSetting
 import theme.AadenMenuTheme
 import theme.CurrentTheme
 import theme.colorsSets
-import view.StoreManagementDialog
+import view.ProfileDialog
 import view.page.activatePage.ActivatePage
 import view.page.homePage.NavigationItem
 import view.page.homePage.RecordPage
@@ -689,7 +689,7 @@ fun AppBase(
                         showLanguageDialog = false
                     }
                     FoodLogDetailDialog(nutritionVM)
-                    StoreManagementDialog(identityVM)
+                    ProfileDialog(identityVM)
                     dialogViewModel.formSchemaList.forEach {
                         BaseFormDialog(it, dialogViewModel)
                     }

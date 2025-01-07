@@ -95,8 +95,8 @@ kotlin {
 
                 implementation(libs.human.readable)
                 implementation(kotlin("reflect"))
-                api("dev.icerock.moko:media:0.11.0")
-                api("dev.icerock.moko:media-compose:0.11.0")
+                api(libs.media)
+                api(libs.media.compose)
 
 
                 implementation(libs.peekaboo.ui)
@@ -117,6 +117,7 @@ kotlin {
                 api(libs.appcompat)
                 api(libs.core.ktx)
                 implementation(libs.ktor.client.android)
+                implementation(libs.coil.network.okhttp)
             }
         }
 

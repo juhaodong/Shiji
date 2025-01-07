@@ -18,11 +18,15 @@ import androidx.compose.material.icons.outlined.LineStyle
 import androidx.compose.material.icons.rounded.CloudSync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import com.raedghazal.kotlinx_datetime_ext.now
 import domain.composable.basic.button.MainButton
 import domain.composable.basic.cards.BaseCardHeader
 import domain.composable.basic.layout.BaseVCenterRow
@@ -31,22 +35,27 @@ import domain.composable.basic.layout.SmallSpacer
 import domain.composable.basic.layout.pa
 import domain.composable.dialog.basic.BeautifulDialog
 import domain.user.IdentityVM
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.plus
+import modules.utils.FormatUtils.displayWithUnit
+import kotlin.toString
 
 @Composable
-fun StoreManagementDialog(identityVM: IdentityVM) {
+fun ProfileDialog(identityVM: IdentityVM) {
     BeautifulDialog(identityVM.showProfileDialog, onDismissRequest = {
         identityVM.showProfileDialog = false
     }) {
         BaseCardHeader(
-            title = "请选择您要查看数据的门店",
-            subtitle = "您还可以添加更多的门店",
-            icon = Icons.Default.Link
+            icon = Icons.Rounded.CloudSync,
+            title = "我的档案和目标",
+            subtitle = "根据您填写的身高体重等数据自动计算。",
         )
+        UserProfileView(identityVM = identityVM)
         BaseVCenterRow(modifier = Modifier.pa()) {
             MainButton(
-                "添加门店",
-                Icons.Default.Add,
-                color = MaterialTheme.colorScheme.primary
+                "修改目标", Icons.Default.Add, color = MaterialTheme.colorScheme.primary
             ) {
                 identityVM.updateProfile {
 
@@ -98,7 +107,7 @@ fun ColumnScope.UserProfileFragment(identityVM: IdentityVM, profileUpdated: () -
 
 
     MainButton("马上填写", icon = Icons.Default.Add) {
-        identityVM.updateProfile{
+        identityVM.updateProfile {
             profileUpdated()
         }
     }
@@ -112,37 +121,89 @@ fun ColumnScope.UserProfileFragment(identityVM: IdentityVM, profileUpdated: () -
     }
 }
 
-
 @Composable
 fun UserProfileView(identityVM: IdentityVM) {
     val profile = identityVM.currentProfile
+    if (profile != null) {
+        val totalMinus = profile.currentWeight.toFloat() - profile.targetWeight.toFloat()
 
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-        ProfileRow("昵称", profile?.nickname ?: "")
-        ProfileRow("生日", profile?.birthDate?.toString() ?: "")
-        ProfileRow("身高", profile?.height?.toString() ?: "")
-        ProfileRow("当前体重", profile?.currentWeight?.toString() ?: "")
-        ProfileRow("目标体重", profile?.targetWeight?.toString() ?: "")
-        ProfileRow("减重周期", profile?.weightLossCycle?.toString() ?: "")
-        ProfileRow("运动强度", profile?.exerciseIntensity?.toString() ?: "")
+        val restDate = profile.weightLossCycle - LocalDate.now()
+            .daysUntil(profile.startDate.plus(profile.weightLossCycle, DateTimeUnit.DAY))
+        val currentWeight =
+            profile.currentWeight.toFloat() - restDate / profile.weightLossCycle.toFloat() * totalMinus
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+            ProfileRow("昵称", profile.nickname)
+            ProfileRow("生日", profile.birthDate.toString(), isDate = true)
+            ProfileRow("身高", profile.height.toString(), unit = "cm")
+            ProfileRow("当前体重", profile.currentWeight.toString(), unit = "kg")
+            ProfileRow("目标体重", profile.targetWeight.toString(), unit = "kg")
+            ProfileRow("减重周期", profile.weightLossCycle.toString(), unit = "天")
+            ProfileRow("本日目标体重", currentWeight.toBigDecimal().displayWithUnit(), unit = "天")
+            ProfileRow("剩余日期", restDate.toString(), unit = "天")
+            ProfileRow(
+                "运动强度", when (profile.exerciseIntensity) {
+                    1 -> ExerciseIntensity.LOW.displayName
+                    2 -> ExerciseIntensity.MEDIUM.displayName
+                    3 -> ExerciseIntensity.HIGH.displayName
+                    else -> ""
+                }
+            )
+
+        }
     }
 }
 
 @Composable
-fun ProfileRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+fun ProfileRow(
+    label: String,
+    value: String,
+    unit: String? = null,
+    isDate: Boolean = false,
+    strong: Boolean = false
+) {
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        color = if (strong) MaterialTheme.colorScheme.primary else
+            MaterialTheme.colorScheme.surfaceVariant.copy(
+                alpha = 0.3f
+            ),
+        modifier = Modifier.padding(vertical = 4.dp),
     ) {
-        Text(
-            text = "$label:",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "$label:",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f),
+                fontWeight = FontWeight.Medium
+            )
+            if (isDate) {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            } else {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                SmallSpacer()
+                if (unit != null) {
+                    Text(
+                        text = unit,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+            }
+
+        }
     }
+}
+
+
+enum class ExerciseIntensity(val displayName: String) {
+    LOW("少量运动"), MEDIUM("中等运动"), HIGH("大量运动")
 }

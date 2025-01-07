@@ -2,9 +2,10 @@
 
 
 calfPermissions = "0.7.0"
-coilCompose = "3.0.0-rc01"
-coilNetworkKtor3 = "3.0.4"
-coilNetworkOkhttp = "3.0.0-rc01"
+
+coilCompose = "3.0.4"
+
+
 filekitCore = "0.8.7"
 firebaseMessaging = "2.1.0"
 humanReadable = "1.10.0"
@@ -27,6 +28,8 @@ kotlinxDatetime = "0.6.1"
 lifecycleViewmodelCompose = "2.8.2"
 material3WindowSizeClassMultiplatform = "0.5.0"
 materialKolor = "2.0.0"
+media = "0.11.0"
+
 multiplatformLocale = "0.4.0"
 multiplatformSettingsNoArg = "1.0.0"
 napierVersion = "2.6.1"
@@ -51,8 +54,8 @@ androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstall
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
 calf-permissions = { module = "com.mohamedrejeb.calf:calf-permissions", version.ref = "calfPermissions" }
-coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilNetworkKtor3" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 
@@ -91,6 +94,8 @@ ktorfit-lib = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref =
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 m3winsize = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3WindowSizeClassMultiplatform" }
+media = { module = "dev.icerock.moko:media", version.ref = "media" }
+media-compose = { module = "dev.icerock.moko:media-compose", version.ref = "media" }
 multiplatform-locale = { module = "com.vanniktech:multiplatform-locale", version.ref = "multiplatformLocale" }
 multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettingsNoArg" }
 napier = { module = "io.github.aakira:napier", version.ref = "napierVersion" }

@@ -34,14 +34,14 @@ import modules.utils.display
 
 @Composable
 fun AppToolbarFragment(identityVM: IdentityVM, nutritionVM: NutritionVM) {
-    val store = identityVM.currentProfile
-    if (store != null) {
-        val totalMinus = store.currentWeight.toFloat() - store.targetWeight.toFloat()
+    val profile = identityVM.currentProfile
+    if (profile != null) {
+        val totalMinus = profile.currentWeight.toFloat() - profile.targetWeight.toFloat()
 
-        val restDate = store.weightLossCycle - LocalDate.now()
-            .daysUntil(store.startDate.plus(store.weightLossCycle, DateTimeUnit.DAY))
+        val restDate = profile.weightLossCycle - LocalDate.now()
+            .daysUntil(profile.startDate.plus(profile.weightLossCycle, DateTimeUnit.DAY))
         val currentWeight =
-            store.currentWeight.toFloat() - restDate / store.weightLossCycle.toFloat() * totalMinus
+            profile.currentWeight.toFloat() - restDate / profile.weightLossCycle.toFloat() * totalMinus
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -70,7 +70,7 @@ fun AppToolbarFragment(identityVM: IdentityVM, nutritionVM: NutritionVM) {
             SmallSpacer()
             if (nutritionVM.currentDateRange == closingTodayRange())
                 Text(
-                    "剩余${(store.weightLossCycle - restDate)}天",
+                    "剩余${(profile.weightLossCycle - restDate)}天",
                     style = MaterialTheme.typography.bodySmall
                 )
             else

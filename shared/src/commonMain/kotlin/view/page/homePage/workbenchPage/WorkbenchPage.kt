@@ -81,13 +81,9 @@ fun WorkbenchPage(
         HorizontalDivider()
         val initialMenuList =
             listOfNotNull(
-                MenuModel.ActionMenuItem("门店管理") {
+                MenuModel.ActionMenuItem("目标管理") {
                     identityVM.showProfileDialog = true
                 },
-                identityVM.withAuth() {
-                    MenuModel.ActionMenuItem("工作台") { toAdminPage() }
-                },
-                MenuModel.ActionMenuItem("组织管理") { toTeamManagePage() },
                 MenuModel.ActionMenuItem("主题设置") { onChangeTheme() },
                 MenuModel.ActionMenuItem("关于") { identityVM.showComingSoonDialog() },
                 MenuModel.ActionMenuItem("登出") { onLogOut() }
