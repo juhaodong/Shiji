@@ -1,78 +1,66 @@
-# 每日食记 (DailyFoodLog)
+# DailyFoodLog
 
-每日食记是一款基于 Kotlin Multiplatform Compose 的跨平台应用。它帮助用户通过 AI 技术识别食物照片的营养组成，记录每日饮食，并与健康摄入数据进行对比，提供个性化的膳食建议，助力用户实现科学合理的饮食管理。
-
----
-
-## 功能特色 ✨
-
-1. **AI 食物识别**  
-   使用先进的 AI 模型识别用户上传的食物照片，分析食材和营养成分（如热量、蛋白质、脂肪、碳水化合物等）。
-
-2. **每日饮食记录**  
-   自动保存用户的饮食信息，帮助用户查看和管理历史记录。
-
-3. **健康摄入对比**  
-   根据用户的身高、体重、年龄和目标（减脂、增肌或维持体重），提供每日推荐摄入量，并实时对比已摄入的营养数据。
-
-4. **膳食提醒**  
-   提醒用户合理膳食搭配，避免过量摄入或营养不均。
-
-5. **多平台支持**
-   - 使用 **Kotlin Multiplatform Compose** 开发，可在 Android 和 iOS 平台运行。
+DailyFoodLog is a cross-platform application built with Kotlin Multiplatform Compose. It helps users identify the nutritional composition of food through AI technology, track daily meals, and compare them with healthy intake data to provide personalized dietary suggestions for achieving a scientifically balanced diet.
 
 ---
 
-## 技术栈 💻
+## Features ✨
 
-### 前端
+1. **AI Food Recognition**  
+   Leverage advanced AI models to identify food items in uploaded photos, analyzing their nutritional composition (e.g., calories, protein, fat, carbohydrates).
+
+2. **Daily Meal Tracking**  
+   Automatically save meal data, helping users review and manage their dietary habits.
+
+3. **Healthy Intake Comparison**  
+   Offer daily recommended intake based on users' height, weight, age, and goals (e.g., weight loss, muscle gain, or maintenance). Compare recommended and actual intake in real-time.
+
+4. **Dietary Reminders**  
+   Remind users to maintain balanced meals and avoid excessive or unbalanced intake.
+
+5. **Multi-Platform Support**
+    - Built with **Kotlin Multiplatform Compose**, the app runs seamlessly on both Android and iOS platforms.
+
+---
+
+## Tech Stack 💻
+
+### Frontend
 - **Kotlin Multiplatform Compose**
-   - 实现跨平台界面开发
-   - 提供一致的用户体验
+    - Enables cross-platform UI development
+    - Ensures consistent user experience
 
-### 后端
+### Backend
 - **Spring Boot**
-   - 提供强大的 RESTful API 支持
-   - 处理用户数据和每日饮食记录
+    - Provides powerful RESTful API support
+    - Manages user data and daily meal records
 
-### AI 模型
-- **计算机视觉**
-   - 使用图像识别技术分析食物照片
-   - 提供精准的营养成分数据
-
----
-
-## 项目架构 🏗️
-
-```
-├── frontend/               # Kotlin Multiplatform Compose 前端代码
-│   ├── android/           # Android 平台代码
-│   ├── ios/               # iOS 平台代码
-│   └── common/            # 通用业务逻辑和 UI 代码
-```
+### AI Model
+- **Computer Vision**
+    - Analyzes food photos with image recognition technology
+    - Provides accurate nutritional data
 
 ---
 
-## 贡献指南 🤝
 
-欢迎贡献代码！请按照以下步骤提交您的改动：
+## Developer 👩‍💻👨‍💻
 
-1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/awesome-feature`)
-3. 提交更改 (`git commit -m 'Add awesome feature'`)
-4. 推送到分支 (`git push origin feature/awesome-feature`)
-5. 提交 Pull Request
+- **Haodong Ju** - Project Author
+
+For any questions or suggestions, feel free to contact me at: juhaodong@gmail.com
 
 ---
 
-## 开发者 👩‍💻👨‍💻
+## License 📝
 
-- **Haodong Ju** - 项目作者
-
-如有任何问题或建议，请通过邮箱联系：juhaodong@gmail.com
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## 许可证 📝
+## Multi-Language Support 🌍
 
-该项目遵循 [MIT License](LICENSE)。
+This README is available in multiple languages:
+- [中文](README_ZH.md)
+- [English](README.md)
+
+Switch to the desired language version above.
