@@ -102,6 +102,7 @@ kotlin {
                 implementation(libs.peekaboo.ui)
                 implementation(libs.peekaboo.image.picker)
                 implementation(libs.coil.compose)
+                implementation(libs.coil.network.ktor3)
                 implementation(libs.calf.permissions)
 
                 implementation(libs.sain)
@@ -116,7 +117,6 @@ kotlin {
                 api(libs.appcompat)
                 api(libs.core.ktx)
                 implementation(libs.ktor.client.android)
-                implementation(libs.coil.network.okhttp)
             }
         }
 

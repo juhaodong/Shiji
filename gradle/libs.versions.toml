@@ -3,6 +3,7 @@
 
 calfPermissions = "0.7.0"
 coilCompose = "3.0.0-rc01"
+coilNetworkKtor3 = "3.0.4"
 coilNetworkOkhttp = "3.0.0-rc01"
 filekitCore = "0.8.7"
 firebaseMessaging = "2.1.0"
@@ -50,6 +51,7 @@ androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstall
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
 calf-permissions = { module = "com.mohamedrejeb.calf:calf-permissions", version.ref = "calfPermissions" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilNetworkKtor3" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
