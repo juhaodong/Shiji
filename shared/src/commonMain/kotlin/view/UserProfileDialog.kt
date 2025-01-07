@@ -38,8 +38,10 @@ import domain.user.IdentityVM
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import modules.utils.FormatUtils.displayWithUnit
+import modules.utils.closingToday
 import kotlin.toString
 
 @Composable
@@ -133,13 +135,15 @@ fun UserProfileView(identityVM: IdentityVM) {
             profile.currentWeight.toFloat() - restDate / profile.weightLossCycle.toFloat() * totalMinus
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
             ProfileRow("昵称", profile.nickname)
-            ProfileRow("生日", profile.birthDate.toString(), isDate = true)
+            ProfileRow(
+                "生日",
+                closingToday().minus(profile.birthDate!!).years.toString(),
+                unit = "岁"
+            )
             ProfileRow("身高", profile.height.toString(), unit = "cm")
             ProfileRow("当前体重", profile.currentWeight.toString(), unit = "kg")
             ProfileRow("目标体重", profile.targetWeight.toString(), unit = "kg")
             ProfileRow("减重周期", profile.weightLossCycle.toString(), unit = "天")
-            ProfileRow("本日目标体重", currentWeight.toBigDecimal().displayWithUnit(), unit = "天")
-            ProfileRow("剩余日期", restDate.toString(), unit = "天")
             ProfileRow(
                 "运动强度", when (profile.exerciseIntensity) {
                     1 -> ExerciseIntensity.LOW.displayName
@@ -148,6 +152,19 @@ fun UserProfileView(identityVM: IdentityVM) {
                     else -> ""
                 }
             )
+            ProfileRow(
+                "剩余日期",
+                (profile.weightLossCycle - restDate).toString(),
+                unit = "天",
+                strong = true
+            )
+            ProfileRow(
+                "本日目标体重",
+                currentWeight.toBigDecimal().displayWithUnit(),
+                unit = "kg",
+                strong = true
+            )
+
 
         }
     }
@@ -158,12 +175,11 @@ fun ProfileRow(
     label: String,
     value: String,
     unit: String? = null,
-    isDate: Boolean = false,
     strong: Boolean = false
 ) {
     Surface(
         shape = MaterialTheme.shapes.small,
-        color = if (strong) MaterialTheme.colorScheme.primary else
+        color = if (strong) MaterialTheme.colorScheme.inverseSurface else
             MaterialTheme.colorScheme.surfaceVariant.copy(
                 alpha = 0.3f
             ),
@@ -179,26 +195,19 @@ fun ProfileRow(
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.Medium
             )
-            if (isDate) {
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            } else {
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                SmallSpacer()
-                if (unit != null) {
-                    Text(
-                        text = unit,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
-                }
-            }
 
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            SmallSpacer(2)
+            if (unit != null) {
+                Text(
+                    text = unit,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
         }
     }
 }
