@@ -68,7 +68,6 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
-
     BeautifulDialog(nutritionVM.showFoodLogDetailDialog, noPadding = true, onDismissRequest = {
         nutritionVM.showFoodLogDetailDialog = false
     }) {
