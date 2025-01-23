@@ -91,6 +91,7 @@ class GlobalSettingManager {
         PaletteStyle.Rainbow.toString(),
         this
     )
+    var showHealthAdvice: Boolean by BooleanPD(true, this)
 
     private fun getUrl(): String {
         return "http://$ip/"

@@ -25,8 +25,10 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
+import modules.GlobalSettingManager
 import modules.network.AppScope
 import modules.network.SafeRequestScope
+import modules.utils.globalDialogManager
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -38,7 +40,8 @@ class IdentityVM(
 
     val dialogViewModel: DialogViewModel,
 
-    val userProfileService: UserProfileService
+    val userProfileService: UserProfileService,
+    val globalSettingManager: GlobalSettingManager,
 ) : ViewModel() {
 
 
@@ -248,6 +251,33 @@ class IdentityVM(
             }
         }
 
+    }
+
+    fun requestDeleteAccount() {
+        viewModelScope.launch {
+            globalDialogManager.confirmDelete("您的用户账户") {
+                viewModelScope.launch {
+
+                    fireBaseAuth.currentUser?.delete()
+                    logout()
+                }
+
+            }
+        }
+    }
+
+    fun showOnceHealthAdvice() {
+        if (globalSettingManager.showHealthAdvice) {
+            showHealthAdvice()
+            globalSettingManager.showHealthAdvice = false
+        }
+    }
+
+    fun showHealthAdvice() {
+        globalDialogManager.confirmAnd(
+            "请注意",
+            "这里提供的膳食摄入建议是根据世卫组织体重BMI等数据计算，仅供参考，不构成医疗建议。"
+        )
     }
 
     fun showComingSoonDialog() {

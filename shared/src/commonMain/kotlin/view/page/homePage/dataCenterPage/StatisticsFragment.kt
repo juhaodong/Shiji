@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -20,12 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import domain.composable.basic.button.BaseIconButton
 import domain.composable.basic.cards.BaseCardHeader
 import domain.composable.basic.layout.BaseVCenterRow
+import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.user.IdentityVM
 import domain.user.NutritionVM
@@ -35,7 +38,9 @@ import modules.utils.timeToNow
 
 
 @Composable
-fun StatisticsFragment(identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCenter: () -> Unit) {
+fun StatisticsFragment(
+    identityVM: IdentityVM, nutritionVM: NutritionVM, toStatisticCenter: () -> Unit
+) {
     val pullRefreshState = rememberPullToRefreshState()
 
     val scope = rememberCoroutineScope()
@@ -76,6 +81,10 @@ fun StatisticsFragment(identityVM: IdentityVM, nutritionVM: NutritionVM, toStati
                             style = MaterialTheme.typography.headlineMedium,
                             color = if (over) MaterialTheme.colorScheme.error else LocalContentColor.current
                         )
+                        GrowSpacer()
+                        BaseIconButton(Icons.AutoMirrored.Outlined.Help) {
+                            identityVM.showHealthAdvice()
+                        }
 
                     }
                     val max = maxOf(
@@ -161,7 +170,9 @@ fun StatisticsFragment(identityVM: IdentityVM, nutritionVM: NutritionVM, toStati
 
     }
 
-
+    LaunchedEffect(true) {
+        identityVM.showOnceHealthAdvice()
+    }
 
 
 }

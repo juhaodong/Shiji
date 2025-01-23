@@ -45,7 +45,8 @@ fun WorkbenchPage(
 ) {
     val user = identityVM.currentUser ?: return
     val scope = rememberCoroutineScope()
-    val singleImagePicker = rememberImagePickerLauncher(selectionMode = SelectionMode.Single,
+    val singleImagePicker = rememberImagePickerLauncher(
+        selectionMode = SelectionMode.Single,
         scope = scope,
         onResult = { byteArrays ->
             byteArrays.firstOrNull()?.let {
@@ -53,7 +54,7 @@ fun WorkbenchPage(
             }
         })
     Column {
-        AppToolbarFragment(identityVM,nutritionVM)
+        AppToolbarFragment(identityVM, nutritionVM)
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
@@ -86,6 +87,7 @@ fun WorkbenchPage(
                 },
                 MenuModel.ActionMenuItem("主题设置") { onChangeTheme() },
                 MenuModel.ActionMenuItem("关于") { identityVM.showComingSoonDialog() },
+                MenuModel.ActionMenuItem("删除账户") { identityVM.requestDeleteAccount() },
                 MenuModel.ActionMenuItem("登出") { onLogOut() }
             )
 
