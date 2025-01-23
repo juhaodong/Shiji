@@ -139,13 +139,7 @@ fun StatisticsFragment(
                         nutritionVM.lastLog()?.createTimestamp?.timeToNow() ?: "尚未用餐",
                         style = MaterialTheme.typography.headlineSmall,
                     )
-
                 }
-
-
-
-
-
 
 
                 SmallSpacer(16)
