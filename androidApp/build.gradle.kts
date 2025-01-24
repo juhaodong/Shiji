@@ -39,6 +39,8 @@ android {
             excludes += "/META-INF/versions/9/previous-compilation-data.bin"
         }
     }
+
+
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
     namespace = "io.shiji.app"
 

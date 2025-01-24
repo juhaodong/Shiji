@@ -13,7 +13,9 @@ import dev.gitlive.firebase.auth.AuthResult
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import domain.composable.dialog.basic.DialogViewModel
+import domain.composable.dialog.form.OptionFormField
 import domain.composable.dialog.form.TextFormField
+import domain.composable.dialog.selection.SelectOption
 import domain.food.service.UserProfile
 import domain.food.service.UserProfileEditDTO
 import domain.food.service.UserProfileService
@@ -28,6 +30,7 @@ import me.tatarka.inject.annotations.Inject
 import modules.GlobalSettingManager
 import modules.network.AppScope
 import modules.network.SafeRequestScope
+import modules.utils.dateOnly
 import modules.utils.globalDialogManager
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -159,36 +162,49 @@ class IdentityVM(
     fun updateProfile(callBack: () -> Unit) {
         viewModelScope.launch {
             val profileEditDTO = dialogViewModel.showFormDialog<UserProfileEditDTO>(
-                TextFormField(keyName = "nickname", label = "昵称"),
+                TextFormField(
+                    keyName = "nickname",
+                    label = "昵称",
+                    defaultValue = currentProfile?.nickname
+                ),
                 TextFormField(
                     keyName = "birthDate",
+                    defaultValue = currentProfile?.birthDate?.dateOnly(),
                     label = "生日",
                     placeHolder = "请按照YYYY-MM-DD填写"
                 ),
-                TextFormField(
-                    keyName = "exerciseIntensity",
-                    label = "锻炼强度",
-                    placeHolder = ""
+                OptionFormField(
+                    keyName = "exerciseIntensity", "锻炼强度", options = listOf(
+                        SelectOption("剧烈(每周15小时)", value = 3),
+                        SelectOption("中等(每周3-5小时)", value = 2),
+                        SelectOption("轻度(每周1-3小时)", value = 1),
+                    ),
+                    defaultValue = currentProfile?.exerciseIntensity
                 ),
+
                 TextFormField(
                     keyName = "height",
                     label = "身高(cm)",
-                    placeHolder = ""
+                    placeHolder = "",
+                    defaultValue = currentProfile?.height.toString()
                 ),
                 TextFormField(
                     keyName = "currentWeight",
                     label = "当前体重(kg)",
-                    placeHolder = ""
+                    placeHolder = "",
+                    defaultValue = currentProfile?.currentWeight.toString()
                 ),
                 TextFormField(
                     keyName = "targetWeight",
                     label = "目标体重(kg)",
-                    placeHolder = ""
+                    placeHolder = "",
+                    defaultValue = currentProfile?.targetWeight.toString()
                 ),
                 TextFormField(
                     keyName = "weightLossCycle",
                     label = "减重周期(天)",
-                    placeHolder = ""
+                    placeHolder = "",
+                    defaultValue = currentProfile?.weightLossCycle.toString()
                 ),
                 title = "修改个人资料",
             )

@@ -31,7 +31,7 @@ fun BaseFormDialog(
         )
 
         Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
+            modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f, fill = false),
         ) {
             formSchema.fields.forEachIndexed { index, field ->
                 field.render(

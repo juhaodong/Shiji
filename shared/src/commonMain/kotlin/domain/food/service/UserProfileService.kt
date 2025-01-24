@@ -1,5 +1,6 @@
 package domain.food.service
 
+import com.raedghazal.kotlinx_datetime_ext.now
 import de.jensklingenberg.ktorfit.http.*
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.datetime.LocalDate
@@ -72,7 +73,8 @@ data class UserProfileEditDTO(
             height = this.height.toDouble(),
             currentWeight = this.currentWeight.toDouble(),
             targetWeight = this.targetWeight.toDouble(),
-            weightLossCycle = this.weightLossCycle.toIntOrNull() ?: 0
+            weightLossCycle = this.weightLossCycle.toIntOrNull() ?: 0,
+            startDate = LocalDate.now()
         )
     }
 }
@@ -87,6 +89,7 @@ data class UserProfileRequest(
     val currentWeight: Double,
     val targetWeight: Double,
     val weightLossCycle: Int,
+    val startDate: LocalDate,
 
     val exerciseIntensity: Int
 )
