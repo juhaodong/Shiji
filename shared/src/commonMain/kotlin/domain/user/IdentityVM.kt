@@ -205,6 +205,9 @@ class IdentityVM(
                     keyName = "weightLossCycle",
                     label = "减重周期(天>30)",
                     placeHolder = "",
+                    validator = {
+                        (it?.toIntOrNull() ?: 0) > 30
+                    },
                     defaultValue = currentProfile?.weightLossCycle.toString()
                 ),
                 title = "修改个人资料",
