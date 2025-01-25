@@ -51,6 +51,9 @@ import domain.food.service.FoodLog
 import domain.food.service.NutritionRecommendation
 import domain.user.NutritionVM
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import modules.share.MimeType
 import modules.share.ShareFileModel
@@ -183,7 +186,7 @@ fun FoodLogDetailDialog(nutritionVM: NutritionVM) {
                         icon = Icons.Default.IosShare
                     ) {
                         sharing = true
-                        scope.launch {
+                        CoroutineScope(Dispatchers.IO).launch{
                             val imageBitmap = graphicsLayer.toImageBitmap()
                             val result = shareManager.shareFile(
                                 ShareFileModel(

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredSizeIn
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
@@ -50,6 +53,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.mohamedrejeb.calf.permissions.ExperimentalPermissionsApi
 import com.mohamedrejeb.calf.permissions.Permission
 import com.mohamedrejeb.calf.permissions.isGranted
@@ -81,10 +85,16 @@ import domain.food.service.PlateSizeSelector
 import domain.user.IdentityVM
 import domain.user.NutritionVM
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import modules.utils.FormatUtils.displayWithUnit
 import modules.utils.imageWithProxy
 import modules.utils.timeToNow
+import org.jetbrains.compose.resources.painterResource
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.hourglass
 
 
 @Composable
@@ -142,17 +152,19 @@ fun RecordPage(
                                 nutritionVM.showFoodLog(it)
                             }) {
                             Column(modifier = Modifier) {
-                                AsyncImage(
+                                SubcomposeAsyncImage(
                                     model = it.imageUrl,
                                     contentDescription = null,
-                                    onError = {
-                                        Napier.e { "ERR-->" + it.result.throwable.message.toString() }
+                                    loading = {
+                                        Column(modifier = Modifier.fillMaxWidth().height(128.dp)) {
+                                            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                                        }
 
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                         .requiredSizeIn(minHeight = 64.dp).clip(
-                                        MaterialTheme.shapes.large
-                                    ),
+                                            MaterialTheme.shapes.large
+                                        ),
                                     contentScale = ContentScale.FillWidth
                                 )
                                 Column(modifier = Modifier.pa(8)) {
@@ -338,7 +350,7 @@ fun RecordPage(
             "我记好了", icon = Icons.Default.Check, loading = nutritionVM.foodLogLoading
         ) {
             nutritionVM.foodLogLoading = true
-            scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 nutritionVM.createFoodLog(
                     personCount,
                     imageByteArray!!,
