@@ -13,6 +13,7 @@ import dev.gitlive.firebase.auth.AuthResult
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import domain.composable.dialog.basic.DialogViewModel
+import domain.composable.dialog.form.DateFormField
 import domain.composable.dialog.form.OptionFormField
 import domain.composable.dialog.form.TextFormField
 import domain.composable.dialog.selection.SelectOption
@@ -167,9 +168,9 @@ class IdentityVM(
                     label = "昵称",
                     defaultValue = currentProfile?.nickname
                 ),
-                TextFormField(
+                DateFormField(
                     keyName = "birthDate",
-                    defaultValue = currentProfile?.birthDate?.dateOnly(),
+                    defaultValue = currentProfile?.birthDate,
                     label = "生日",
                     placeHolder = "请按照YYYY-MM-DD填写"
                 ),
@@ -202,7 +203,7 @@ class IdentityVM(
                 ),
                 TextFormField(
                     keyName = "weightLossCycle",
-                    label = "减重周期(天)",
+                    label = "减重周期(天>30)",
                     placeHolder = "",
                     defaultValue = currentProfile?.weightLossCycle.toString()
                 ),
