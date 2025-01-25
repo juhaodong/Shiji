@@ -347,16 +347,20 @@ fun RecordPage(
         SmallSpacer(24)
 
         MainButton(
-            "我记好了", icon = Icons.Default.Check, loading = nutritionVM.foodLogLoading
+            "我记好了", icon = Icons.Default.Check, loading = nutritionVM.foodLogLoading,
+            enable = imageByteArray != null
         ) {
             nutritionVM.foodLogLoading = true
             CoroutineScope(Dispatchers.IO).launch {
-                nutritionVM.createFoodLog(
-                    personCount,
-                    imageByteArray!!,
-                    minPlateSize.approximateDiameterCm
-                )
-                showDialog = false
+                if (imageByteArray != null) {
+                    nutritionVM.createFoodLog(
+                        personCount,
+                        imageByteArray!!,
+                        minPlateSize.approximateDiameterCm
+                    )
+                    showDialog = false
+                }
+
             }
 
         }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -11,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,20 +70,23 @@ fun MainButton(
     icon: ImageVector? = null,
     color: Color = MaterialTheme.colorScheme.primaryContainer,
     loading: Boolean = false,
+    enable: Boolean = true,
     onClick: () -> Unit = {}
 ) {
+    val contentColor = contentColorFor(color)
     Surface(
         onClick = onClick,
         shape = MaterialTheme.shapes.large,
-        color = color
+        color = color,
+        enabled = enable
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.height(64.dp).padding(16.dp).fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (loading) {
-                CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                CircularProgressIndicator(modifier = Modifier.size(24.dp), color = contentColor)
             } else {
                 if (icon != null) {
                     SmallSpacer(16)
@@ -114,6 +119,7 @@ fun RowScope.MainActionGrowButton(
     color: Color = MaterialTheme.colorScheme.primaryContainer,
     onClick: () -> Unit = {}
 ) {
+    val contentColor = contentColorFor(color)
     Surface(
         onClick = onClick,
         shape = MaterialTheme.shapes.large,
@@ -121,12 +127,12 @@ fun RowScope.MainActionGrowButton(
         modifier = Modifier.weight(1f)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.height(64.dp).padding(16.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (loading) {
-                CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                CircularProgressIndicator(modifier = Modifier.size(24.dp), color = contentColor)
             } else {
                 if (icon != null) {
                     Icon(imageVector = icon, contentDescription = null)
