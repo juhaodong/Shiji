@@ -203,10 +203,10 @@ class IdentityVM(
                 ),
                 TextFormField(
                     keyName = "weightLossCycle",
-                    label = "减重周期(天>30)",
+                    label = "减重周期(天>=30)",
                     placeHolder = "",
                     validator = {
-                        (it?.toIntOrNull() ?: 0) > 30
+                        (it?.toIntOrNull() ?: 0) >= 30
                     },
                     defaultValue = currentProfile?.weightLossCycle.toString()
                 ),
