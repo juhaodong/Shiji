@@ -296,7 +296,8 @@ class IdentityVM(
     fun showHealthAdvice() {
         globalDialogManager.confirmAnd(
             "请注意",
-            "这里提供的膳食摄入建议是根据世卫组织体重BMI等数据计算，仅供参考，不构成医疗建议。"
+            "这里提供的膳食摄入建议是根据世卫组织体重BMI等数据计算，仅供参考，不构成医疗建议。" +
+                    "参考链接：https://www.who.int/zh/news-room/fact-sheets/detail/healthy-diet"
         )
     }
 
