@@ -458,8 +458,14 @@ fun AppBase(
                                                     }
                                                 },
                                                 onLogOut = {
-                                                    identityVM.logout()
-                                                    goto(RouteName.LOGIN, clearAllStack = true)
+                                                    dialogManager.confirmAnd(
+                                                        "您是否确定要登出？",
+                                                        "登出之后您将需要再重新登录才能使用本App"
+                                                    ) {
+                                                        identityVM.logout()
+                                                        goto(RouteName.LOGIN, clearAllStack = true)
+                                                    }
+
                                                 },
                                                 toTeamManagePage = {
                                                     goto(RouteName.TeamManage)
@@ -486,8 +492,6 @@ fun AppBase(
                                     goto(RouteName.HOME, clearAllStack = true)
                                 }
                             }
-
-
 
 
                         }

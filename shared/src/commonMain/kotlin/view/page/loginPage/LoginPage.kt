@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import domain.composable.DarkModeDisplay
 import domain.composable.autofill
 import domain.composable.basic.button.MainActionGrowButton
+import domain.composable.basic.keyboard.OTPLayout
+import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.composable.basic.wrapper.LoadingIndicator
 import domain.composable.dialog.form.generateKeyboardType
@@ -58,6 +60,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import modules.utils.isValidEmail
 import org.jetbrains.compose.resources.painterResource
+import qrgenerator.qrkitpainter.email
 import shijiapp.shared.generated.resources.memo
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,235 +100,88 @@ fun LoginPage(
                 .imePadding()
                 .fillMaxSize(),
         ) {
-
-            var email by remember { mutableStateOf("") }
-            var loading by remember { mutableStateOf(false) }
-            var emailConfirmed by remember { mutableStateOf(false) }
-            var password by remember { mutableStateOf("") }
-            var confirmPassword by remember { mutableStateOf("") }
-            var isRegistered by remember { mutableStateOf(false) }
-
-            var displayName by remember {
-                mutableStateOf("")
-            }
-
-            var errorMessage by remember { mutableStateOf("") }
-            var haveError by remember { mutableStateOf(false) }
-
-            Column(
-                modifier = Modifier
-                    .weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painterResource(Res.drawable.memo),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(16 / 9f),
-                    contentScale = ContentScale.Fit
-                )
-                SmallSpacer()
-                Text("每日食记", style = MaterialTheme.typography.titleLarge)
-
-            }
+            GrowSpacer()
             Column(modifier = Modifier.padding(16.dp, vertical = 8.dp)) {
                 if (identityVM.userLoadFinished) {
-                    val emailFocus = remember { FocusRequester() }
-                    val passwordFocus = remember { FocusRequester() }
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = {
-                            email = it
-                        },
-                        label = { Text("Email") },
-                        shape = MaterialTheme.shapes.large,
-                        keyboardOptions = generateKeyboardType(
-                            true,
-                            keyboardType = KeyboardType.Email
-                        ),
-                        isError = haveError,
-                        modifier = Modifier.fillMaxWidth().focusRequester(emailFocus).autofill(
-                            listOf(
-                                AutofillType.EmailAddress,
-                                AutofillType.Username,
-                            ),
-                            onFill = {
-                                email = it
-                            }
-                        ),
-                        enabled = !emailConfirmed,
-                        trailingIcon = if (emailConfirmed && isRegistered) {
-                            {
-                                Text(
-                                    "忘记密码?",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    modifier = Modifier.padding(horizontal = 16.dp).clickable {
-                                        scope.launch {
-                                            manager.confirmAnd(
-                                                title = "您不记得密码了吗？",
-                                                content = "请不要担心，点击下面的确认按钮，我们会发送一个重置密码的邮件到您的邮箱里。",
-                                            ) {
-                                                scope.launch {
-                                                    identityVM.sendPasswordResetEmail(email)
-                                                }
-                                                manager.confirmAnd(
-                                                    "重置密码邮件已发送",
-                                                    "请到邮箱查看，并重置密码"
-                                                )
-                                            }
-                                        }
-                                    })
-                            }
-                        } else {
-                            {
-                                Text(
-                                    "匿名登录", style = MaterialTheme.typography.labelSmall,
-                                    modifier = Modifier.padding(horizontal = 16.dp).clickable {
-                                        scope.launch {
-                                            manager.confirmAnd(
-                                                title = "您确定要匿名登录吗？",
-                                                content = "请注意，匿名登录有很多不方便的地方，" +
-                                                        "例如：在登出后，或是在应用重新安装后，或在其他设备上，您将无法保存目前的状态。",
-                                            ) {
-                                                scope.launch {
-                                                    loading = true
-                                                    identityVM.logInAsGuest()
-                                                    loading = false
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            }
-                        },
-                        supportingText = if (haveError) {
-                            { Text(errorMessage, color = MaterialTheme.colorScheme.error) }
-                        } else {
-                            null
+                    if (identityVM.emailConfirmed) {
+
+                        OTPLayout(
+                            "您的登录验证码已经发送到您的邮箱，请在60秒内输入验证码",
+                            back = {
+                                identityVM.reset()
+                            },
+                            checkOTP = {
+                                identityVM.loginWithOTP(it)
+                            }) {
+                            identityVM.refreshUserInfo()
                         }
-                    )
-                    if (emailConfirmed) {
+
+                    } else {
+                        val emailFocus = remember { FocusRequester() }
                         OutlinedTextField(
-                            value = password,
+                            value = identityVM.emailInput,
+                            onValueChange = {
+                                identityVM.emailInput = it
+                            },
+                            label = { Text("Email") },
                             shape = MaterialTheme.shapes.large,
-                            onValueChange = { password = it },
-                            label = { Text("Password") },
-                            visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = generateKeyboardType(
-                                isRegistered,
-                                keyboardType = KeyboardType.Password
+                                true,
+                                keyboardType = KeyboardType.Email
                             ),
-                            modifier = Modifier.fillMaxWidth().focusRequester(passwordFocus)
-                                .autofill(
-                                    autofillTypes = if (isRegistered) listOf(AutofillType.Password) else listOf(
-                                        AutofillType.NewPassword
-                                    ),
-                                    onFill = {
-                                        password = it
-                                        if (!isRegistered) {
-                                            confirmPassword = it
-                                        }
-                                    }
-                                )
-                        )
-                        if (!isRegistered) {
-                            OutlinedTextField(
-                                value = confirmPassword,
-                                shape = MaterialTheme.shapes.large,
-                                onValueChange = { confirmPassword = it },
-                                label = { Text("Confirm Password") },
-                                visualTransformation = PasswordVisualTransformation(),
-                                keyboardOptions = generateKeyboardType(
-                                    false,
-                                    keyboardType = KeyboardType.Password
+                            isError = identityVM.haveError,
+                            modifier = Modifier.fillMaxWidth().focusRequester(emailFocus).autofill(
+                                listOf(
+                                    AutofillType.EmailAddress,
+                                    AutofillType.Username,
                                 ),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            OutlinedTextField(
-                                value = displayName,
-                                shape = MaterialTheme.shapes.large,
-                                onValueChange = { displayName = it },
-                                label = { Text("用户显示名称") },
-                                keyboardOptions = generateKeyboardType(
-                                    true,
-                                    keyboardType = KeyboardType.Text
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-
-                    SmallSpacer()
-
-                    LaunchedEffect(true) {
-                        emailFocus.requestFocus()
-                    }
-                    Row() {
-                        if (emailConfirmed) {
-                            MainActionGrowButton(
-                                "返回",
-                                color = MaterialTheme.colorScheme.surfaceContainer,
-                            ) {
-
-                                emailConfirmed = false
-                                isRegistered = false
-                                password = ""
-                                confirmPassword = ""
-
-                            }
-                            SmallSpacer()
-                        }
-                        MainActionGrowButton(
-                            if (!emailConfirmed) "继续" else if (isRegistered) "登录" else "注册",
-                            loading = loading,
-                        ) {
-                            loading = true
-                            fun showError(message: String) {
-                                haveError = message.isNotBlank()
-                                errorMessage = message
-                                loading = false
-                            }
-                            if (!emailConfirmed) {
-                                if (email.isNotBlank() && email.isValidEmail()) {
-                                    scope.launch {
-                                        val result = identityVM.getLoginMethods(email)
-                                        result.forEach { Napier.e { it } }
-                                        emailConfirmed = true
-                                        isRegistered = result.contains("password")
-                                        delay(20)
-                                        passwordFocus.requestFocus()
-                                        loading = false
-                                    }
-                                } else {
-                                    showError("请输入有效的邮箱地址")
+                                onFill = {
+                                    identityVM.emailInput = it
+                                }
+                            ),
+                            enabled = !identityVM.emailConfirmed,
+                            supportingText = if (identityVM.haveError) {
+                                {
+                                    Text(
+                                        identityVM.errorMessage,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
                                 }
                             } else {
-                                if (isRegistered) {
-                                    if (password.isNotBlank()) {
-                                        scope.launch {
-                                            val err = identityVM.loginWithPassword(email, password)
-                                            showError(err)
-                                        }
-                                    } else {
-                                        showError("密码不能为空")
-                                    }
-                                } else {
-                                    if (password.isNotBlank() && confirmPassword == password) {
-                                        scope.launch {
-                                            val err = identityVM.registerWithPassword(
-                                                email,
-                                                password,
-                                                displayName
-                                            )
-                                            showError(err)
-                                        }
-                                    } else {
-                                        showError("密码不一致或密码为空")
-                                    }
+                                null
+                            }
+                        )
+                        SmallSpacer()
+
+                        LaunchedEffect(true) {
+                            emailFocus.requestFocus()
+                        }
+                        Row {
+                            if (identityVM.emailConfirmed) {
+                                MainActionGrowButton(
+                                    "返回",
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
+                                ) {
+                                    identityVM.reset()
+
+
+                                }
+                                SmallSpacer()
+                            }
+                            MainActionGrowButton(
+                                if (!identityVM.emailConfirmed) "继续" else "登录",
+                                loading = identityVM.loading,
+                            ) {
+
+
+                                if (!identityVM.emailConfirmed) {
+                                    identityVM.sendOTPToEmail()
                                 }
                             }
                         }
                     }
+
+
                 } else {
                     LoadingIndicator()
                 }

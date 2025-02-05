@@ -23,12 +23,15 @@ import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import me.tatarka.inject.annotations.Inject
 import modules.GlobalSettingManager
 import modules.network.AppScope
 import modules.network.SafeRequestScope
 import modules.network.safe
 import modules.utils.globalDialogManager
+import modules.utils.isValidEmail
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -53,8 +56,6 @@ class IdentityVM(
     var userLoadFinished by mutableStateOf(false)
 
 
-
-    var loggingIn by mutableStateOf(true)
     fun refreshUserInfo() {
         viewModelScope.launch {
             if (globalSettingManager.token.isNotBlank()) {
@@ -68,33 +69,65 @@ class IdentityVM(
                     onUserUpdated(null)
                 }
 
+            } else {
+                onUserUpdated(null)
             }
 
         }
     }
 
-    var otpInput by mutableStateOf("")
     var emailInput by mutableStateOf("")
-    fun loginWithOTP() {
-        viewModelScope.launch {
-            val user = suspend {
-                cloudUserService.loginUsingOTP(
-                    request = OTPLoginRequest(
-                        email = currentUser!!.email,
-                        otp = otpInput
-                    )
-                )
-            }.safe()
-            globalSettingManager.token = user?.tokenValue ?: ""
-            refreshUserInfo()
-        }
+
+    var loading by mutableStateOf(false)
+    var errorMessage by mutableStateOf("")
+    var emailConfirmed by mutableStateOf(false)
+    var haveError by mutableStateOf(false)
+    fun showError(message: String) {
+        haveError = message.isNotBlank()
+        errorMessage = message
+        loading = false
     }
+
+    fun reset() {
+        emailInput = ""
+        emailConfirmed = false
+
+        loading = false
+        errorMessage = ""
+        haveError = false
+    }
+
+    suspend fun loginWithOTP(otp: String): Boolean {
+        loading = true
+        val user = suspend {
+            cloudUserService.loginUsingOTP(
+                request = OTPLoginRequest(
+                    email = emailInput,
+                    otp = otp
+                )
+            )
+        }.safe()
+        loading = false
+        globalSettingManager.token = user?.tokenValue ?: ""
+        return globalSettingManager.token.isNotBlank()
+
+
+    }
+
 
     fun sendOTPToEmail() {
         viewModelScope.launch {
-            suspend {
-                cloudUserService.sendOTP(email = currentUser!!.email)
-            }.safe()
+            loading = true
+            if (emailInput.isNotBlank() && emailInput.isValidEmail()) {
+                suspend {
+                    cloudUserService.sendOTP(email = emailInput)
+                }.safe()
+                emailConfirmed = true
+            } else {
+                showError("请输入有效的邮箱地址")
+            }
+            loading = false
+
         }
     }
 
@@ -140,11 +173,15 @@ class IdentityVM(
                 TextFormField(
                     keyName = "nickname",
                     label = "昵称",
-                    defaultValue = currentProfile?.nickname
+                    defaultValue = currentProfile?.nickname ?: ""
                 ),
                 DateFormField(
                     keyName = "birthDate",
-                    defaultValue = currentProfile?.birthDate,
+                    defaultValue = currentProfile?.birthDate ?: LocalDate(
+                        year = 2000,
+                        month = Month.FEBRUARY,
+                        1
+                    ),
                     label = "生日",
                     placeHolder = "请按照YYYY-MM-DD填写"
                 ),
@@ -154,26 +191,26 @@ class IdentityVM(
                         SelectOption("中等(每周3-5小时)", value = 2),
                         SelectOption("轻度(每周1-3小时)", value = 1),
                     ),
-                    defaultValue = currentProfile?.exerciseIntensity
+                    defaultValue = currentProfile?.exerciseIntensity ?: ""
                 ),
 
                 TextFormField(
                     keyName = "height",
                     label = "身高(cm)",
                     placeHolder = "",
-                    defaultValue = currentProfile?.height.toString()
+                    defaultValue = currentProfile?.height?.toString() ?: ""
                 ),
                 TextFormField(
                     keyName = "currentWeight",
                     label = "当前体重(kg)",
                     placeHolder = "",
-                    defaultValue = currentProfile?.currentWeight.toString()
+                    defaultValue = currentProfile?.currentWeight?.toString() ?: ""
                 ),
                 TextFormField(
                     keyName = "targetWeight",
                     label = "目标体重(kg)",
                     placeHolder = "",
-                    defaultValue = currentProfile?.targetWeight.toString()
+                    defaultValue = currentProfile?.targetWeight?.toString() ?: ""
                 ),
                 TextFormField(
                     keyName = "weightLossCycle",
@@ -182,7 +219,7 @@ class IdentityVM(
                     validator = {
                         (it?.toIntOrNull() ?: 0) >= 30
                     },
-                    defaultValue = currentProfile?.weightLossCycle.toString()
+                    defaultValue = currentProfile?.weightLossCycle?.toString() ?: ""
                 ),
                 title = "修改个人资料",
             )

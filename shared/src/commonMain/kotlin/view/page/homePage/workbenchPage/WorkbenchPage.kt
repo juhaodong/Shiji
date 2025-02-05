@@ -1,10 +1,6 @@
 package view.page.homePage.workbenchPage
 
-import shijiapp.shared.generated.resources.Res
-import shijiapp.shared.generated.resources.no_image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -18,18 +14,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.preat.peekaboo.image.picker.SelectionMode
-import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import domain.composable.basic.button.BaseIconButton
 import domain.composable.basic.cards.LabelText
 import domain.composable.basic.layout.BaseVCenterRow
 import domain.composable.basic.layout.GrowSpacer
 import domain.composable.basic.layout.SmallSpacer
 import domain.composable.dialog.basic.DialogViewModel
-import domain.composable.dialog.selection.SelectOption
 import domain.user.IdentityVM
 import domain.user.NutritionVM
 import org.jetbrains.compose.resources.painterResource
+import shijiapp.shared.generated.resources.Res
+import shijiapp.shared.generated.resources.no_image
 import view.page.homePage.AppToolbarFragment
 
 
@@ -43,42 +38,8 @@ fun WorkbenchPage(
     onChangeTheme: () -> Unit,
     onLogOut: () -> Unit
 ) {
-    val user = identityVM.currentUser ?: return
-    val scope = rememberCoroutineScope()
-    val singleImagePicker = rememberImagePickerLauncher(
-        selectionMode = SelectionMode.Single,
-        scope = scope,
-        onResult = { byteArrays ->
-            byteArrays.firstOrNull()?.let {
-                identityVM.updateImage(it)
-            }
-        })
     Column {
         AppToolbarFragment(identityVM, nutritionVM)
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-        ) {
-            SmallSpacer()
-            UserListDisplay(
-                displayName = user.displayName,
-                userId = user.email ?: user.uid,
-                photoUrl = user.photoURL
-            ) {
-                dialogViewModel.runInScope {
-                    val change = dialogViewModel.showSelectDialog(
-                        "请选择要设置的内容", listOf(
-                            SelectOption("昵称 📝", "昵称"),
-                            SelectOption("头像 🖼️", "头像"),
-                        )
-                    )
-                    if (change == "昵称") {
-                        identityVM.updateUserName()
-                    } else {
-                        singleImagePicker.launch()
-                    }
-                }
-            }
-        }
         HorizontalDivider()
         val initialMenuList =
             listOfNotNull(

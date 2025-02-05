@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 fun OTPLayout(
     title: String,
     checkOTP: suspend (String) -> Boolean,
+    back: () -> Unit,
     otpLength: Int = 6,
     onSuccess: (String) -> Unit
 ) {
@@ -83,11 +84,13 @@ fun OTPLayout(
                 "7", "8", "9",
                 "4", "5", "6",
                 "1", "2", "3",
-                "", "0", IkKey("C", color = MaterialTheme.colorScheme.tertiaryContainer),
+                "<-", "0", IkKey("C", color = MaterialTheme.colorScheme.tertiaryContainer),
             ).toKeyList()
         ) { name, _ ->
             if (name == "C") {
                 currentOTPValue = ""
+            } else if (name == "<-") {
+                back()
             } else {
                 currentOTPValue += name
                 scope.launch {

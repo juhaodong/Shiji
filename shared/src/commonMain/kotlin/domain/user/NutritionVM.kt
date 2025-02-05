@@ -58,7 +58,7 @@ class NutritionVM(
             val deferredData = async {
                 SafeRequestScope.handleRequest {
                     nutritionService.getNutritionData(
-                        identityVM.currentUser!!.uid,
+                        identityVM.currentUser!!.id,
                         currentDateRange.first,
                         currentDateRange.second
                     )
@@ -83,7 +83,7 @@ class NutritionVM(
                 foodLogService.saveFoodLog(
                     FoodLogRequest(
                         imageUrl = imageUrl,
-                        uid = identityVM.currentUser!!.uid,
+                        uid = identityVM.currentUser!!.id,
                         personCount = personCount.toString(),
                         minPlateRadius = minPlateRadius
                     )
@@ -106,7 +106,7 @@ class NutritionVM(
         foodLogLoading = false
         val remote = SafeRequestScope.handleRequest {
             foodLogService.findFoodLogsByUidAndDateRange(
-                identityVM.currentUser!!.uid,
+                identityVM.currentUser!!.id,
                 currentDateRange.first,
                 currentDateRange.second
             )
