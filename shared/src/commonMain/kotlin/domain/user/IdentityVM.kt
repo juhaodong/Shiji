@@ -8,10 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.AuthResult
-import dev.gitlive.firebase.auth.FirebaseUser
-import dev.gitlive.firebase.auth.auth
 import domain.composable.dialog.basic.DialogViewModel
 import domain.composable.dialog.form.DateFormField
 import domain.composable.dialog.form.OptionFormField
@@ -31,6 +27,7 @@ import me.tatarka.inject.annotations.Inject
 import modules.GlobalSettingManager
 import modules.network.AppScope
 import modules.network.SafeRequestScope
+import modules.network.safe
 import modules.utils.globalDialogManager
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -39,117 +36,95 @@ import kotlin.uuid.Uuid
 @AppScope
 @Inject
 class IdentityVM(
-
-
     val dialogViewModel: DialogViewModel,
-
     val userProfileService: UserProfileService,
+    val cloudUserService: CloudUserService,
     val globalSettingManager: GlobalSettingManager,
 ) : ViewModel() {
-
-
-    fun <R> withAuth(content: () -> R): R? {
-        if (haveAuth()) {
-            return content()
-        }
-        return null
-    }
 
 
     var currentlyOffline by mutableStateOf(false)
     var showComingSoon by mutableStateOf(false)
     var showProfileDialog by mutableStateOf(false)
 
-    var currentUser: FirebaseUser? by mutableStateOf(null)
-    val fireBaseAuth = Firebase.auth
+    var currentUser: CloudUser? by mutableStateOf(null)
 
 
     var userLoadFinished by mutableStateOf(false)
-    var userProfileLoading by mutableStateOf(false)
-    fun toggleProfileDialog() {
-        if (userProfileLoading) {
-            return
-        }
+
+
+
+    var loggingIn by mutableStateOf(true)
+    fun refreshUserInfo() {
         viewModelScope.launch {
-            if (!showProfileDialog) {
-                userProfileLoading = true
-                refreshProfile()
-                userProfileLoading = false
+            if (globalSettingManager.token.isNotBlank()) {
+                val userInfo =
+                    suspend {
+                        cloudUserService.getUserInfoByToken(token = globalSettingManager.token)
+                    }.safe()
+                if (userInfo != null) {
+                    onUserUpdated(userInfo)
+                } else {
+                    onUserUpdated(null)
+                }
+
             }
 
-
-        }
-        showProfileDialog = !showProfileDialog
-
-    }
-
-    suspend fun getLoginMethods(email: String): List<String> {
-        return fireBaseAuth.fetchSignInMethodsForEmail(email)
-    }
-
-    suspend fun loginWithPassword(email: String, password: String): String {
-        try {
-            fireBaseAuth.signInWithEmailAndPassword(email, password)
-            return ""
-        } catch (e: Exception) {
-            return e.message!!
         }
     }
 
-    suspend fun registerWithPassword(email: String, password: String, displayName: String): String {
-        return try {
-            fireBaseAuth.createUserWithEmailAndPassword(email, password)
-            if (currentUser != null) {
-                currentUser?.updateProfile(displayName = displayName)
-            }
-            currentUser = fireBaseAuth.currentUser
-            ""
-        } catch (e: Exception) {
-            e.message!!
+    var otpInput by mutableStateOf("")
+    var emailInput by mutableStateOf("")
+    fun loginWithOTP() {
+        viewModelScope.launch {
+            val user = suspend {
+                cloudUserService.loginUsingOTP(
+                    request = OTPLoginRequest(
+                        email = currentUser!!.email,
+                        otp = otpInput
+                    )
+                )
+            }.safe()
+            globalSettingManager.token = user?.tokenValue ?: ""
+            refreshUserInfo()
+        }
+    }
+
+    fun sendOTPToEmail() {
+        viewModelScope.launch {
+            suspend {
+                cloudUserService.sendOTP(email = currentUser!!.email)
+            }.safe()
         }
     }
 
     fun logout() {
         viewModelScope.launch {
             userLoadFinished = false
-            fireBaseAuth.signOut()
+            suspend {
+                cloudUserService.logout(token = globalSettingManager.token)
+            }.safe()
+            globalSettingManager.token = ""
+            onUserUpdated(null)
             userLoadFinished = true
         }
     }
 
-    suspend fun sendPasswordResetEmail(email: String) {
-        return fireBaseAuth.sendPasswordResetEmail(email)
-    }
 
-    suspend fun logInAsGuest(): AuthResult {
-        return fireBaseAuth.signInAnonymously()
-    }
-
-
-    private var currentOtp = ""
-
-    var bindingStore by mutableStateOf(false)
     var currentProfile by mutableStateOf<UserProfile?>(null)
-    var updateUserProfileDialog by mutableStateOf(false)
-
-
-    fun haveAuth(): Boolean {
-        return true
-    }
-
 
     private suspend fun refreshProfile() {
 
         if (currentUser != null) {
             currentProfile =
-                SafeRequestScope.handleRequest { userProfileService.getUserProfile(currentUser!!.uid) }
+                SafeRequestScope.handleRequest { userProfileService.getUserProfile(currentUser!!.id) }
         } else {
             currentProfile = null
         }
     }
 
 
-    private suspend fun onUserUpdated(user: FirebaseUser?) {
+    private suspend fun onUserUpdated(user: CloudUser?) {
         userLoadFinished = false
         currentUser = user
         Napier.e { "authStateChanged" }
@@ -211,7 +186,7 @@ class IdentityVM(
                 ),
                 title = "修改个人资料",
             )
-            val profile = profileEditDTO.toUserProfile(currentUser!!.uid)
+            val profile = profileEditDTO.toUserProfile(currentUser!!.id)
             SafeRequestScope.handleRequest {
                 userProfileService.createOrUpdateUserProfile(profile)
             }
@@ -221,26 +196,6 @@ class IdentityVM(
 
     }
 
-
-    fun updateUserName() {
-        viewModelScope.launch {
-            currentUser?.updateProfile(
-                displayName =
-                    dialogViewModel.showInput("请输入新的用户名")
-            )
-            currentUser = fireBaseAuth.currentUser
-        }
-    }
-
-    fun updateImage(imageByteArray: ByteArray) {
-        viewModelScope.launch {
-            val imageUrl = uploadFile(imageByteArray)
-            currentUser?.updateProfile(
-                photoUrl = imageUrl
-            )
-            currentUser = fireBaseAuth.currentUser
-        }
-    }
 
     suspend fun uploadFile(byteArray: ByteArray): String? {
 
@@ -265,10 +220,8 @@ class IdentityVM(
     init {
         viewModelScope.launch {
             LibresSettings.languageCode = "zh"
-            fireBaseAuth.authStateChanged.collect {
-                onUserUpdated(it)
-            }
         }
+        refreshUserInfo()
 
     }
 
@@ -276,8 +229,6 @@ class IdentityVM(
         viewModelScope.launch {
             globalDialogManager.confirmDelete("您的用户账户") {
                 viewModelScope.launch {
-
-                    fireBaseAuth.currentUser?.delete()
                     logout()
                 }
 

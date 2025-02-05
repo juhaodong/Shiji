@@ -13,6 +13,8 @@ import domain.food.service.UserProfileService
 import domain.food.service.createFoodLogService
 import domain.food.service.createNutritionService
 import domain.food.service.createUserProfileService
+import domain.user.CloudUserService
+import domain.user.createCloudUserService
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -28,6 +30,8 @@ import me.tatarka.inject.annotations.Provides
 import me.tatarka.inject.annotations.Scope
 import modules.utils.BigDecimalSerializer
 import modules.utils.UUIDSerializer
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -41,10 +45,15 @@ const val cloudUrl = "https://cloud-v2.aaden.io"
 var startRoute = RouteName.HOME
 
 
+
 @AppScope
 @Component
 abstract class NetModule {
 
+    @AppScope
+    @Provides
+    protected fun cloudUserService(ktorfit: Ktorfit): CloudUserService =
+        ktorfit.createCloudUserService()
 
     @AppScope
     @Provides

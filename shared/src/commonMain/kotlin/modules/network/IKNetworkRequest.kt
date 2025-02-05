@@ -2,7 +2,10 @@ package modules.network
 
 
 import io.github.aakira.napier.Napier
+import io.ktor.client.request.request
 import kotlinx.serialization.Serializable
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 
 @Serializable
@@ -45,6 +48,26 @@ object IKNetworkRequest {
     }
 
 }
+
+suspend fun <T> (suspend () -> T).safe(
+    shouldThrow: Boolean = false,
+    reportError: Boolean = true,
+): T? {
+    return try {
+        this()
+    } catch (e: Exception) {
+        if (shouldThrow) {
+            throw e
+        } else {
+            if (reportError) {
+                Napier.e(("NETWORK ERROR" + e.message))
+                Napier.e(e.stackTraceToString())
+            }
+        }
+        null
+    }
+}
+
 
 object SafeRequestScope {
     suspend fun <T> handleRequest(

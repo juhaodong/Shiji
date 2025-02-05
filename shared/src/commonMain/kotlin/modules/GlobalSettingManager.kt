@@ -81,7 +81,7 @@ class GlobalSettingManager {
 
 
     var darkMode: Boolean by BooleanPD(false, this)
-
+    var token: String by StringPD("", this)
 
     var currentColorSchemeId: String by StringPD(colorsSets[0].value.toString(), this)
 
