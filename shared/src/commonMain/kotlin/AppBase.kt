@@ -216,6 +216,7 @@ fun AppBase(
 
             } else {
                 goto(RouteName.LOGIN, clearAllStack = true)
+                nutritionVM.selectedNavigationItem = NavigationItem.DataCenter
             }
         }
     }
