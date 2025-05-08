@@ -57,8 +57,8 @@ android {
         signingConfig = signingConfigs.getByName("innerKen")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildTypes {
         getByName("release") {
@@ -72,7 +72,7 @@ android {
         buildConfig = true
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(21)
     }
 
 }
@@ -93,5 +93,3 @@ configurations.all {
     resolutionStrategy {
     }
 }
-
-

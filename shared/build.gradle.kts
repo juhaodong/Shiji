@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     kotlin("multiplatform")
-    kotlin("native.cocoapods")
     id("com.android.library")
 
     id("kotlinx-serialization")
@@ -37,18 +36,6 @@ kotlin {
         }
     }
 
-    cocoapods {
-        version = "1.0.2"
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
-        ios.deploymentTarget = "14.1"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
-            isStatic = true
-            baseName = "shared"
-
-        }
-    }
 
     sourceSets {
         val commonMain by getting {
@@ -157,11 +144,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
 }
 
@@ -215,4 +202,3 @@ data class LanguageMetaInfo(
         """.trimIndent()
     }
 }
-
